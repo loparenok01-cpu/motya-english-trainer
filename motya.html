@@ -1,0 +1,1404 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Мотя учит слова 🕷️</title>
+<style>
+  :root{
+    --bg1:#eaf6ea; --bg2:#d8ecd8; --ink:#2e5d3a;
+    --accent:#8fc79a; --accent2:#bfe0c4; --warn:#e8a5a5; --ok:#a9d9b0;
+    --btn:#39804f; --btn-shadow:#2a6b3e;
+    --shadow:0 6px 18px rgba(46,93,58,.12);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:linear-gradient(160deg,var(--bg1),var(--bg2));min-height:100vh}
+  .wrap{max-width:760px;margin:0 auto;padding:18px}
+  header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  h1{margin:0 0 6px;font-size:26px;letter-spacing:.3px;flex:1}
+  h1 small{display:block;font-weight:400;font-size:13px;opacity:.7}
+  .mute-btn{background:#fff;border:1px solid #cfe3d2;border-radius:12px;padding:8px 12px;font-size:20px;cursor:pointer;box-shadow:0 3px 0 #cfe3d2;min-width:46px;min-height:46px}
+  .mute-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #cfe3d2}
+  .card{background:#fff;border-radius:18px;padding:16px 18px;box-shadow:var(--shadow);margin:12px 0}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  button, .btn{background:var(--btn);color:#fff;border:0;border-radius:12px;padding:10px 14px;font-size:15px;cursor:pointer;box-shadow:0 3px 0 var(--btn-shadow);transition:transform .05s;min-height:44px}
+  button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--btn-shadow)}
+  button:disabled{opacity:.55;cursor:default;transform:none}
+  button.ghost{background:#fff;color:var(--ink);box-shadow:0 3px 0 #cfe3d2;border:1px solid #cfe3d2}
+  button.small{padding:6px 10px;font-size:13px;min-height:34px}
+  input[type=text], input[type=number], textarea, select{border:1px solid #cfe3d2;border-radius:12px;padding:10px 12px;font-size:16px;background:#f7fbf7;color:var(--ink);width:100%}
+  textarea{min-height:96px;font-family:ui-monospace,Consolas,monospace}
+  .muted{opacity:.7;font-size:13px}
+  .tag{display:inline-block;background:var(--accent2);color:var(--ink);border-radius:999px;padding:3px 10px;font-size:12px;margin-right:6px}
+  .web{width:100%;height:150px;display:block}
+  .node{fill:#fff;stroke:var(--accent);stroke-width:3}
+  .node.done{fill:var(--ok)}
+  .node.current{fill:#fff7c2;stroke:#d9b84a}
+  .line{stroke:var(--accent2);stroke-width:2;stroke-dasharray:4 4}
+  .spider{transition:transform .6s cubic-bezier(.5,1.6,.5,1)}
+  .spider.shake{animation:shake .4s}
+  @keyframes shake{0%,100%{transform:translate(0,0)}25%{transform:translate(-6px,0)}75%{transform:translate(6px,0)}}
+  .bar{height:10px;background:#eaf3ea;border-radius:999px;overflow:hidden;margin:8px 0}
+  .bar > div{height:100%;background:linear-gradient(90deg,var(--accent),#bfe0c4);width:0%;transition:width .4s}
+  .feedback{min-height:28px;font-weight:600;margin-top:6px}
+  .feedback.ok{color:#2f7a3f}
+  .feedback.bad{color:#b14a4a}
+  .prompt-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .prompt-row .word{font-size:22px;flex:1}
+  details{margin-top:10px}
+  summary{cursor:pointer;color:var(--ink);font-weight:600}
+  .hint{font-size:13px;color:#5a7a60}
+  .finish{text-align:center}
+  .finish h2{margin:4px 0}
+  .timer{font-variant-numeric:tabular-nums;font-size:20px;font-weight:700;color:var(--ink)}
+  .timer.warn{color:#b14a4a}
+  table.records{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
+  table.records th, table.records td{padding:6px 8px;border-bottom:1px solid #e3efe3;text-align:left}
+  table.records th{background:var(--accent2);font-weight:600}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .trans{font-size:15px;font-style:italic;margin-top:6px;font-family:"Lucida Sans Unicode","Arial Unicode MS","Segoe UI Symbol",sans-serif;letter-spacing:.5px;font-weight:500}
+  .choice-btn{background:#f7fbf7;border:2px solid var(--accent2);color:var(--ink);padding:14px 10px;border-radius:12px;font-size:16px;font-weight:500;cursor:pointer;transition:all .15s;text-align:center;min-height:70px;display:flex;flex-direction:column;justify-content:center}
+  .choice-btn:hover:not(:disabled){background:var(--accent2)}
+  .choice-btn:active:not(:disabled){transform:translateY(1px)}
+  .choice-btn.correct{background:#e6f6e9;border-color:#2f7a3f;color:#1f6b32}
+  .choice-btn.wrong{background:#fdecec;border-color:#b14a4a;color:#a33232}
+  .choice-btn:disabled{cursor:default;opacity:.85}
+  .choice-btn.hidden-option{visibility:hidden;pointer-events:none}
+  .choices-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .choice-btn .trans{font-size:13px;margin-top:4px;opacity:.85;word-break:break-word;overflow-wrap:break-word;line-height:1.3}
+  .choice-btn.correct .trans, .choice-btn.wrong .trans{color:inherit;opacity:.9;font-weight:600}
+  .saved-badge{display:inline-block;background:#fff3c4;color:#7a5a00;border-radius:999px;padding:2px 8px;font-size:11px;margin-left:6px;opacity:0;transition:opacity .3s}
+  .saved-badge.show{opacity:1}
+
+  /* экран входа */
+  .got-box{background:#f2faf3;border:1px solid var(--accent2);border-radius:14px;padding:12px 14px;margin:10px 0}
+  .got-name{font-size:19px;font-weight:700;margin-top:4px}
+  .set-item{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1px solid #e3efe3;border-radius:12px;padding:10px 12px;margin-top:8px;background:#fbfefb}
+  .set-item .t{flex:1;min-width:150px}
+  .set-item .t b{display:block}
+  .progress-mini{height:6px;background:#eaf3ea;border-radius:999px;overflow:hidden;margin-top:6px}
+  .progress-mini > div{height:100%;background:var(--accent)}
+  .diff{background:#fff7d6;border:1px solid #e8d48a;border-radius:10px;padding:8px 10px;font-size:13px;margin-top:8px}
+  .btn-file{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--ink);border:1px solid #cfe3d2;border-radius:12px;padding:10px 14px;font-size:15px;cursor:pointer;box-shadow:0 3px 0 #cfe3d2;min-height:44px}
+  .err-list{max-height:190px;overflow:auto;margin-top:8px;font-size:13px}
+  .err-list div{padding:5px 8px;border-bottom:1px solid #f0f4f0}
+  .err-list b{color:#b14a4a}
+  .prev-tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+  .prev-tbl td,.prev-tbl th{padding:5px 7px;border-bottom:1px solid #eef4ee;text-align:left}
+  .err-words{color:#b14a4a;font-weight:600;text-decoration:underline wavy}
+  label.opt{display:block;margin:10px 0 4px;font-size:13px;opacity:.75}
+  @media (max-width:520px){.grid{grid-template-columns:1fr}}
+  @media (max-width:400px){.choices-grid{grid-template-columns:1fr}}
+  @media (max-width:480px){.choice-btn{padding:10px 8px;min-height:65px;font-size:15px}.choice-btn .trans{font-size:11px}}
+  @media (max-width:360px){.choice-btn{padding:8px 6px;min-height:60px;font-size:14px}.choice-btn .trans{font-size:10px}}
+  :focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🕷️ Мотя учит слова <small>паук-полиглот. Ползи по паутинке и собирай слова!</small></h1>
+    <button class="mute-btn" id="mute" title="Звук вкл/выкл">🔊</button>
+  </header>
+
+  <div id="entry" class="card">
+    <div id="gotBox" class="got-box" style="display:none">
+      <span class="tag">набор получен</span>
+      <div class="got-name" id="gotName"></div>
+      <div class="muted" id="gotMeta"></div>
+      <div id="gotDiff" class="diff" style="display:none"></div>
+    </div>
+
+    <div id="legacyBox" class="got-box" style="display:none">
+      <span class="tag">из пробной версии</span>
+      <div class="muted" id="legacyMeta"></div>
+      <div class="row" style="margin-top:8px">
+        <button class="ghost small" id="useLegacy">Использовать как набор</button>
+        <button class="ghost small" id="dropLegacy">Скрыть</button>
+      </div>
+    </div>
+
+    <div class="row" style="justify-content:space-between">
+      <div><span class="tag">мои наборы</span><span class="muted" id="histCount"></span></div>
+      <button class="ghost small" id="btnNewSet">+ добавить набор</button>
+    </div>
+    <div id="histList"></div>
+
+    <div id="addBox" style="display:none;margin-top:12px">
+      <textarea id="code" placeholder="вставьте сюда код набора, который прислал преподаватель"></textarea>
+      <div class="row" style="margin-top:8px">
+        <label class="btn-file">📂 Выбрать файл<input type="file" id="setFile" accept=".json,.csv,.txt" hidden></label>
+        <button id="useCode" style="margin-left:auto">Загрузить код</button>
+      </div>
+      <div class="hint" style="margin-top:6px">Файл можно перетащить прямо в окно браузера.</div>
+      <div id="addStatus" class="muted" style="margin-top:6px"></div>
+    </div>
+
+    <details id="prefsBox">
+      <summary>Настройки игры</summary>
+      <label class="opt">Режим</label>
+      <select id="mode">
+        <option value="ru-en">RU → EN (ввод с клавиатуры)</option>
+        <option value="choice">👁️ Виз. выбор RU → EN (карточки)</option>
+        <option value="en-ru">EN → RU (ввод с клавиатуры)</option>
+        <option value="choice-en-ru">👁️ Виз. выбор EN → RU (карточки)</option>
+        <option value="v1-to-all">🎯 V1 → V2, V3, перевод</option>
+      </select>
+      <label class="opt" id="verbFormLabel">Форма глагола</label>
+      <select id="verbForm">
+        <option value="all">Все формы (V1, V2, V3)</option>
+        <option value="v1">Только V1 (Infinitive)</option>
+        <option value="v2">Только V2 (Past Simple)</option>
+        <option value="v3">Только V3 (Past Participle)</option>
+      </select>
+      <label class="opt">Порядок</label>
+      <select id="wordOrder">
+        <option value="fixed">📋 По порядку (как в файле)</option>
+        <option value="random">🎲 В случайном порядке</option>
+      </select>
+      <div class="row" style="margin-top:10px">
+        <label class="muted"><input type="checkbox" id="timedMode"> Режим «на время»</label>
+        <label class="muted" id="timeLabel" style="display:none">Длительность:
+          <select id="timeLimit" style="width:120px">
+            <option value="60">60 секунд</option>
+            <option value="120">2 минуты</option>
+            <option value="180">3 минуты</option>
+            <option value="300">5 минут</option>
+          </select>
+        </label>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button class="ghost small" id="btnPreview">👀 Предпросмотр набора</button>
+        <details style="flex:1;margin:0">
+          <summary style="font-size:13px">Скачать шаблон</summary>
+          <div class="row" style="margin-top:8px">
+            <button class="ghost small" data-tpl="words">📄 Слова</button>
+            <button class="ghost small" data-tpl="verbs">📄 Глаголы</button>
+            <button class="ghost small" data-tpl="verbs-trans">📄 Глаголы с транскрипцией</button>
+            <button class="ghost small" data-tpl="phrases">📄 Фразы</button>
+            <button class="ghost small" data-tpl="json">📄 JSON</button>
+          </div>
+        </details>
+      </div>
+    </details>
+
+    <div class="row" style="margin-top:12px">
+      <label class="muted" style="flex:1;min-width:160px">Ученик:
+        <input type="text" id="pupil" list="pupils" placeholder="введите имя" autocomplete="off" style="margin-top:4px">
+        <datalist id="pupils"></datalist>
+      </label>
+      <button id="start" style="margin-left:auto;align-self:flex-end">▶ Начать</button>
+    </div>
+    <div id="entryStatus" class="muted" style="margin-top:6px"></div>
+
+    <details style="margin-top:10px">
+      <summary>🏆 Таблица рекордов</summary>
+      <div id="recordsHere"></div>
+    </details>
+  </div>
+
+  <div id="game" class="card" style="display:none">
+    <div class="row" style="justify-content:space-between">
+      <div><b id="counter">1 / 0</b> <span class="muted" id="setTag"></span></div>
+      <div class="muted">очков: <b id="score">0</b></div>
+      <div id="timerBox" class="timer" style="display:none">⏱ <span id="timer">00:00</span></div>
+    </div>
+    <div class="bar"><div id="bar"></div></div>
+
+    <svg class="web" id="web" viewBox="0 0 600 170" preserveAspectRatio="none" aria-hidden="true"></svg>
+
+    <div class="prompt-row"><div class="word" id="prompt"></div></div>
+
+    <input type="text" id="answer" placeholder="введи ответ..." autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="ответ">
+    <div id="choices" class="choices-grid" style="display:none"></div>
+
+    <div class="feedback" id="fb" role="status" aria-live="polite"></div>
+
+    <div class="row" style="margin-top:8px">
+      <button id="check">Проверить</button>
+      <button class="ghost" id="hint">💡 Подсказка</button>
+      <button class="ghost" id="skip">Пропустить →</button>
+      <button class="ghost" id="quit">В меню</button>
+    </div>
+    <div class="hint" id="hintText"></div>
+  </div>
+
+  <div id="finish" class="card finish" style="display:none">
+    <h2 id="finishTitle">🎉 Мотя доволен!</h2>
+    <div class="muted" id="finishSub">Ты прошёл всю паутинку.</div>
+    <div style="margin:10px 0">Очков: <b id="finalScore">0</b> · Правильных: <b id="finalCorrect">0</b>/<b id="finalTotal">0</b> · Попыток: <b id="finalAttempts">0</b></div>
+    <div id="mastery" class="muted"></div>
+
+    <div class="row" style="justify-content:center;margin-top:12px">
+      <button id="again">Ещё раз</button>
+      <button class="ghost" id="againErr" style="display:none">🔁 Только ошибки</button>
+      <button class="ghost" id="againMenu">В меню</button>
+      <button class="ghost" id="exportCsv">📥 Отчёт для учителя</button>
+    </div>
+
+    <details style="margin-top:14px;text-align:left">
+      <summary>Разбор: что нужно повторить</summary>
+      <div id="wrongList"></div>
+    </details>
+
+    <details style="margin-top:10px;text-align:left">
+      <summary>🏆 Таблица рекордов</summary>
+      <div id="recordsFinish"></div>
+    </details>
+  </div>
+</div>
+
+<script>
+/* ===== CORE START ===== */
+const FMT = "1";
+const WARN_LEN = 4000;
+
+/* --- base64url поверх UTF-8 --- */
+function bytesToB64u(bytes){
+  let bin = "";
+  for(let i=0;i<bytes.length;i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function b64uToBytes(s){
+  s = String(s).replace(/-/g,"+").replace(/_/g,"/");
+  while(s.length % 4) s += "=";
+  const bin = atob(s);
+  const out = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+/* --- LZSS: флаг-байт, далее 8 элементов; 1 = литерал, 0 = совпадение (12 бит смещение + 4 бит длина) --- */
+const LZ_MIN = 3, LZ_MAX = 18, LZ_WINDOW = 4096, LZ_HASH = 1 << 15;
+
+function lzCompress(input){
+  const data = new TextEncoder().encode(input);
+  const n = data.length;
+  const out = [];
+  const head = new Int32Array(LZ_HASH).fill(-1);
+  const prev = new Int32Array(Math.max(1,n)).fill(-1);
+  let pos = 0;
+  while(pos < n){
+    const flagPos = out.length;
+    out.push(0);
+    let flag = 0;
+    for(let bit=0; bit<8 && pos < n; bit++){
+      let bestLen = 0, bestOff = 0;
+      if(pos + LZ_MIN <= n){
+        const h = ((data[pos]<<10) ^ (data[pos+1]<<5) ^ data[pos+2]) & (LZ_HASH-1);
+        const maxLen = Math.min(LZ_MAX, n - pos);
+        let cand = head[h], tries = 96;
+        while(cand >= 0 && tries-- > 0 && bestLen < maxLen){
+          if(pos - cand > LZ_WINDOW) break; // цепочка идёт по убыванию позиций: дальше только старше окна
+          let len = 0;
+          while(len < maxLen && data[cand+len] === data[pos+len]) len++;
+          if(len > bestLen){ bestLen = len; bestOff = pos - cand; }
+          cand = prev[cand];
+        }
+        prev[pos] = head[h];
+        head[h] = pos;
+      }
+      if(bestLen >= LZ_MIN){
+        const off = bestOff - 1;
+        out.push((off >> 4) & 0xFF, ((off & 0x0F) << 4) | (bestLen - LZ_MIN));
+        for(let k=1; k<bestLen; k++){ // пропущенные позиции тоже в цепочку — иначе теряем совпадения
+          const q = pos + k;
+          if(q + LZ_MIN <= n){
+            const hq = ((data[q]<<10) ^ (data[q+1]<<5) ^ data[q+2]) & (LZ_HASH-1);
+            prev[q] = head[hq]; head[hq] = q;
+          }
+        }
+        pos += bestLen;
+      } else {
+        flag |= 0x80 >> bit;
+        out.push(data[pos]);
+        pos++;
+      }
+    }
+    out[flagPos] = flag;
+  }
+  return out;
+}
+
+function lzDecompress(bytes){
+  const out = [];
+  let i = 0;
+  while(i < bytes.length){
+    const flag = bytes[i++];
+    for(let bit=0; bit<8; bit++){
+      if(i >= bytes.length) break;
+      if(flag & (0x80 >> bit)){
+        out.push(bytes[i++]);
+      } else {
+        if(i+1 >= bytes.length) throw new Error("обрыв потока");
+        const b0 = bytes[i++], b1 = bytes[i++];
+        const off = ((b0 << 4) | (b1 >> 4)) + 1;
+        const len = (b1 & 0x0F) + LZ_MIN;
+        const start = out.length - off;
+        if(start < 0) throw new Error("повреждённый поток");
+        for(let k=0; k<len; k++) out.push(out[start+k]);
+      }
+    }
+  }
+  return out;
+}
+
+/* --- набор: компактная упаковка --- */
+function setToRows(set){
+  return (set.w || []).map(r => Array.isArray(r) ? r.slice(0,4) : [r.ru, (r.en||[]).join("|"), (r.trans||[]).join("|"), r.note||""]);
+}
+function rowsToWords(rows){
+  return (rows||[]).map(r=>{
+    const en = String(r[1]||"").split("|").filter(Boolean);
+    let tr = String(r[2]||"").split("|");
+    if(tr.length !== en.length) tr = en.map((_,i)=> tr[i] || "");
+    return {ru: String(r[0]||""), en, trans: tr};
+  });
+}
+/* lean=true — id и name не дублируются в payload: для ссылки они и так лежат отдельными параметрами */
+function packSet(set, lean){
+  const rows = setToRows(set).map(r=>{
+    const o = r.slice(0,4);
+    while(o.length > 2 && !String(o[o.length-1] == null ? "" : o[o.length-1]).trim()) o.pop();
+    return o;
+  });
+  const compact = JSON.stringify({i: lean ? "" : (set.i||""), n: lean ? "" : (set.n||""), d: set.d||"", w: rows});
+  return FMT + "." + bytesToB64u(lzCompress(compact));
+}
+function unpackSet(payload){
+  payload = String(payload||"").replace(/\s+/g,"");
+  const dot = payload.indexOf(".");
+  if(dot < 0) throw new Error("не похоже на код набора");
+  const ver = payload.slice(0, dot);
+  if(ver !== FMT) throw new Error(ver > FMT ? "набор из более новой версии приложения" : "неизвестный формат кода");
+  const bytes = lzDecompress(b64uToBytes(payload.slice(dot+1)));
+  const obj = JSON.parse(new TextDecoder("utf-8").decode(Uint8Array.from(bytes)));
+  if(!obj || !Array.isArray(obj.w)) throw new Error("в коде нет слов");
+  return {i:obj.i||"", n:obj.n||"", d:obj.d||"", w:obj.w};
+}
+
+/* --- ссылка и код --- */
+function buildLink(baseUrl, set){
+  const p = new URLSearchParams();
+  p.set("v", FMT);
+  p.set("i", set.i || "");
+  p.set("n", set.n || "");
+  p.set("d", packSet(set, true));
+  return String(baseUrl||"motya.html").split("#")[0] + "#" + p.toString();
+}
+function readSetFromLocation(){
+  const h = (location.hash||"").replace(/^#+/,"");
+  if(!h) return null;
+  let p;
+  try{ p = new URLSearchParams(h); }catch(e){ return {error:"ссылка повреждена"}; }
+  if(!p.get("d")) return {error:"в ссылке нет набора — попросите преподавателя прислать код"};
+  if(p.get("v") && p.get("v") !== FMT) return {error:"набор из другой версии приложения — обновите файл"};
+  try{
+    const set = unpackSet(p.get("d"));
+    if(!set.i) set.i = p.get("i") || "";   // lean-ссылка: id и имя лежат отдельными параметрами
+    if(!set.n) set.n = p.get("n") || "";
+    set.viaLink = true;
+    return set;
+  }catch(e){
+    return {error: e.message || "код не читается"};
+  }
+}
+
+/* --- парсер слов --- */
+const HEADER_RE = /^\s*(?:№|русский|рус|слово|рус\.?|word|english|eng|v1|v2|v3|транскрипция|transcription|infinitive|past|номер|no|#)(?![\p{L}\p{N}])/iu;
+const IPA_RE = /[ˈˌŋːɪæʌəɜɒɔðθʃʒɡɹɑɔ]/;
+
+function isTranscription(s){
+  return /^[\[(/]/.test(s) || (IPA_RE.test(s) && !/[A-Za-z]/.test(s));
+}
+function pickSeparator(lines){
+  const tally = {";":0, "\t":0, ",":0};
+  for(const raw of lines){
+    const l = raw.trim();
+    if(!l) continue;
+    const c = {";":0, "\t":0, ",":0};
+    let depth = 0;
+    for(let i=0;i<l.length;i++){
+      const ch = l[i];
+      if(ch === '"'){ // пропускаем содержимое кавычек
+        i++;
+        while(i < l.length && l[i] !== '"') i++;
+        continue;
+      }
+      if(ch === "[" || ch === "(") depth++;
+      else if(ch === "]" || ch === ")"){ if(depth > 0) depth--; }
+      else if(depth === 0 && c[ch] !== undefined) c[ch]++;
+    }
+    let best = ";", bestN = 0;
+    for(const k of [";", "\t", ","]) if(c[k] > bestN){ bestN = c[k]; best = k; }
+    if(bestN > 0) tally[best]++;
+  }
+  let sep = ";", best = 0;
+  for(const k of [";", "\t", ","]) if(tally[k] > best){ best = tally[k]; sep = k; }
+  return sep;
+}
+function splitLine(line, sep){
+  const out = [];
+  let cur = "", i = 0, inQ = false, depth = 0;
+  while(i < line.length){
+    const c = line[i];
+    if(inQ){
+      if(c === '"'){
+        if(line[i+1] === '"'){ cur += '"'; i += 2; continue; }
+        inQ = false; i++; continue;
+      }
+      cur += c; i++; continue;
+    }
+    if(c === '"'){ inQ = true; i++; continue; }
+    if(c === "[" || c === "("){ depth++; cur += c; i++; continue; }
+    if(c === "]" || c === ")"){ if(depth > 0) depth--; cur += c; i++; continue; }
+    if(c === sep && depth === 0){ out.push(cur); cur = ""; i++; continue; }
+    cur += c; i++;
+  }
+  out.push(cur);
+  return out.map(s => s.trim());
+}
+function wordsFromObject(x){
+  const ru = String(x.ru ?? x.RU ?? x.word ?? x.title ?? "");
+  let en = x.en ?? x.EN ?? x.eng ?? [];
+  if(!Array.isArray(en)) en = (en === "" ? [] : String(en).split("|"));
+  en = en.map(s => String(s).trim()).filter(Boolean);
+  let tr = x.trans ?? x.tr ?? [];
+  if(!Array.isArray(tr)) tr = tr === "" ? [] : String(tr).split("|");
+  tr = tr.map(s => String(s).trim());
+  if(tr.length === 1 && tr[0] === "" && en.length > 1) tr = en.map(() => "");
+  if(tr.length !== en.length) tr = en.map((_,i) => tr[i] || "");
+  const note = String(x.note ?? x.комментарий ?? "");
+  return {ru, en, trans: tr, note};
+}
+function parseText(text){
+  const res = {ok:[], rejected:[]};
+  let t = String(text || "").replace(/^\uFEFF/, "").trim();
+  if(!t) return res;
+
+  if(t[0] === "[" || t[0] === "{"){
+    try{
+      const j = JSON.parse(t);
+      const arr = Array.isArray(j) ? j
+        : (Array.isArray(j.w) ? j.w.map(r => Array.isArray(r) ? {ru:r[0], en:r[1], trans:r[2], note:r[3]} : r) : [j]);
+      for(const x of arr){
+        const w = wordsFromObject(x);
+        if(w.ru && w.en.length) res.ok.push(w);
+        else res.rejected.push({raw: JSON.stringify(x).slice(0,60), reason: !w.ru ? "нет русского перевода" : "нет английской формы"});
+      }
+      return res;
+    }catch(e){ /* не JSON — разбираем как текст */ }
+  }
+
+  const rawLines = t.split(/\r?\n/);
+  const sep = pickSeparator(rawLines);
+  const lines = rawLines.map(l => l.replace(/^\uFEFF/, "")).filter(l => l.trim());
+
+  if(lines.length && HEADER_RE.test(lines[0]) && lines[0].includes(sep)) lines.shift();
+
+  for(const line of lines){
+    const parts = splitLine(line, sep).filter(Boolean);
+    if(!parts.length) continue;
+    let ru = "";
+    const en = [];
+    const trans = [];
+    let bad = "";
+    for(const p of parts){
+      if(isTranscription(p)){
+        if(en.length){
+          if(!trans[en.length-1]) trans[en.length-1] = p;
+        } else bad = bad || "транскрипция без английской формы";
+      } else if(/[а-яА-ЯёЁ]/.test(p) && !/[a-zA-Z]/.test(p)){
+        if(!ru) ru = p; else bad = bad || "второй русский фрагмент в строке";
+      } else {
+        en.push(p); trans.push("");
+      }
+    }
+    if(!ru) bad = bad || "нет русского перевода";
+    else if(!en.length) bad = bad || "нет английской формы";
+    if(bad) res.rejected.push({raw: line.trim().slice(0,70), reason: bad});
+    else res.ok.push({ru, en, trans});
+  }
+  return res;
+}
+
+/* --- прогресс ученика --- */
+const LS_PROGRESS = "motya_progress_v1";
+function loadAllProgress(){
+  try{ return JSON.parse(localStorage.getItem(LS_PROGRESS) || "{}") || {}; }
+  catch(e){ return {}; }
+}
+function setProgress(setId, pupil, data){
+  try{
+    const all = loadAllProgress();
+    all[setId] = all[setId] || {};
+    all[setId][pupil] = data;
+    localStorage.setItem(LS_PROGRESS, JSON.stringify(all));
+  }catch(e){ /* приватный режим — молча пропускаем */ }
+}
+function getProgress(setId, pupil){
+  const all = loadAllProgress();
+  return (all[setId] && all[setId][pupil]) || {w:{}, s:[], sd:{}};
+}
+function blankProgress(){ return {w:{}, s:[], sd:{}}; }
+function recordWord(setId, pupil, ru, en, ok){
+  const p = getProgress(setId, pupil);
+  const key = normalizeKey(ru);
+  const prev = p.w[key] || {a:0, ok:0, last:false, t:0};
+  p.w[key] = {ru, en, a: prev.a + 1, ok: prev.ok + (ok ? 1 : 0), last: !!ok, t: Date.now(), lvl: ok ? Math.min(4, (prev.lvl||0) + 1) : 0};
+  setProgress(setId, pupil, p);
+  return p;
+}
+function recordSession(setId, pupil, session){
+  const p = getProgress(setId, pupil);
+  p.s = (p.s || []).concat([session]).slice(-50);
+  setProgress(setId, pupil, p);
+}
+function progressSummary(setId, pupil, rows){
+  const p = getProgress(setId, pupil);
+  let learned = 0, touched = 0;
+  for(const r of rows){
+    const e = p.w[normalizeKey(r[0])];
+    if(e){ touched++; if(e.last) learned++; }
+  }
+  return {learned, touched, total: rows.length, sessions: (p.s||[]).length};
+}
+function normalizeKey(s){ return String(s||"").toLowerCase().replace(/\s+/g," ").trim(); }
+function diffSets(oldSet, newSet){
+  const oldMap = new Map();
+  for(const r of (oldSet.w||[])) oldMap.set(normalizeKey(r[0]), r[1]);
+  let added = 0, changed = 0;
+  for(const r of (newSet.w||[])){
+    const k = normalizeKey(r[0]);
+    if(!oldMap.has(k)) added++;
+    else if(oldMap.get(k) !== r[1]) changed++;
+  }
+  return {added, changed, total: (newSet.w||[]).length};
+}
+/* ===== CORE END ===== */
+
+
+
+
+
+/* ===== Шаблоны файлов ===== */
+const TEMPLATES = {
+  words:{name:"motya_template_words.csv", content:"\uFEFFРусский;English;Транскрипция\r\nкошка;cat;[kæt]\r\nсобака;dog;[dɒɡ]\r\nдом;house;[haʊs]\r\n"},
+  verbs:{name:"motya_template_verbs.csv", content:"\uFEFFРусский;V1;V2;V3\r\nбудить;wake;woke;woken\r\nбыть;be;was/were;been\r\n"},
+  "verbs-trans":{name:"motya_template_verbs_with_transcription.csv", content:"\uFEFFРусский;V1;Транскрипция V1;V2;Транскрипция V2;V3;Транскрипция V3\r\nбудить;wake;[weɪk];woke;[wəʊk];woken;[ˈwəʊkən]\r\nбыть;be;[biː];was/were;[wɒz]/[weə];been;[biːn]\r\n"},
+  phrases:{name:"motya_template_phrases.csv", content:"\uFEFFРусский;English;Транскрипция\r\nдоброе утро;good morning;[ɡʊd ˈmɔnɪŋ]\r\nспокойной ночи;good night;[ɡʊd naɪt]\r\n"},
+  json:{name:"motya_template_words.json", content:JSON.stringify([{ru:"кошка", en:["cat"], trans:["[kæt]"]},{ru:"будить", en:["wake","woke","woken"], trans:["[weɪk]","[wəʊk]","[ˈwəʊkən]"]}], null, 2)}
+};
+
+function download(name, content, mime){
+  const blob = new Blob([content], {type: (mime||"text/plain") + ";charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=> URL.revokeObjectURL(url), 500);
+}
+document.querySelectorAll("[data-tpl]").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const t = TEMPLATES[btn.getAttribute("data-tpl")];
+    if(!t) return;
+    download(t.name, t.content, t.name.endsWith(".json") ? "application/json" : "text/csv");
+    $("entryStatus").textContent = "✅ Шаблон скачан: " + t.name;
+  });
+});
+
+/* ===== ЗВУКОВЫЕ ЭФФЕКТЫ ===== */
+const SFX = (()=>{
+  let ctx = null, muted = false, masterGain = null;
+  function ensure(){
+    if(ctx) return ctx;
+    try{
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return null;
+      ctx = new AC(); masterGain = ctx.createGain(); masterGain.gain.value = 1; masterGain.connect(ctx.destination);
+    }catch(e){ ctx = null; }
+    return ctx;
+  }
+  function unlock(){ const c = ensure(); if(c && c.state === "suspended") c.resume(); }
+  ["click","touchstart","keydown"].forEach(ev=> document.addEventListener(ev, unlock, {passive:true}));
+  function setMuted(m){ muted = !!m; if(masterGain) masterGain.gain.value = muted ? 0 : 1; }
+  function isMuted(){ return muted; }
+  function tone({freq=440, type="sine", dur=0.2, start=0, vol=0.3, attack=0.005, decay=null}){
+    const c = ensure(); if(!c) return;
+    const t0 = c.currentTime + start, osc = c.createOscillator(), g = c.createGain();
+    osc.type = type; osc.frequency.value = freq;
+    g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(vol, t0 + attack);
+    const end = t0 + dur; g.gain.exponentialRampToValueAtTime(0.0001, end + (decay||0.05));
+    osc.connect(g); g.connect(masterGain); osc.start(t0); osc.stop(end + 0.1);
+  }
+  function click({dur=0.04, freq=1200, q=6, vol=0.25, start=0}){
+    const c = ensure(); if(!c) return;
+    const t0 = c.currentTime + start, bufSize = Math.floor(c.sampleRate * dur);
+    const buf = c.createBuffer(1, bufSize, c.sampleRate), data = buf.getChannelData(0);
+    for(let i=0;i<bufSize;i++) data[i] = (Math.random()*2-1) * (1 - i/bufSize);
+    const src = c.createBufferSource(); src.buffer = buf;
+    const bp = c.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = freq; bp.Q.value = q;
+    const g = c.createGain(); g.gain.value = vol;
+    src.connect(bp); bp.connect(g); g.connect(masterGain); src.start(t0);
+  }
+  function playCorrect(){ tone({freq:880, dur:0.25, vol:0.25}); tone({freq:1320, dur:0.35, start:0.06, vol:0.22}); tone({freq:1760, type:"triangle", dur:0.3, start:0.12, vol:0.12}); }
+  function playStep(){ for(let i=0;i<4;i++) click({start:i*0.11, freq:900+Math.random()*500, dur:0.035, vol:0.18}); }
+  function playError(){ tone({freq:180, type:"sawtooth", dur:0.22, vol:0.18, attack:0.01, decay:0.1}); tone({freq:120, dur:0.25, start:0.05, vol:0.2, attack:0.01}); }
+  function playHint(){
+    const c=ensure(); if(!c) return;
+    const t0=c.currentTime, osc=c.createOscillator(), g=c.createGain();
+    osc.type="sine"; osc.frequency.setValueAtTime(900,t0); osc.frequency.exponentialRampToValueAtTime(300,t0+0.25);
+    g.gain.setValueAtTime(0,t0); g.gain.linearRampToValueAtTime(0.15,t0+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t0+0.3);
+    osc.connect(g); g.connect(masterGain); osc.start(t0); osc.stop(t0+0.35);
+  }
+  function playFinish(){ [523.25,659.25,783.99,1046.5].forEach((f,i)=> tone({freq:f, type:"triangle", dur:0.28, start:i*0.12, vol:0.22, attack:0.01})); }
+  function playTick(){ tone({freq:1600, type:"square", dur:0.05, vol:0.1, attack:0.002}); }
+  return { playCorrect, playStep, playError, playHint, playFinish, playTick, setMuted, isMuted, ensure };
+})();
+
+/* ===== УТИЛИТЫ ===== */
+function shuffle(a){ const b=a.slice(); for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]]; } return b; }
+function normalize(s){ return String(s??"").toLowerCase().replace(/[.,!?;:"'`´]/g,"").replace(/\s+/g," ").trim(); }
+function isChoiceMode(m){ return m === "choice" || m === "choice-en-ru"; }
+function isEnRuMode(m){ return m === "en-ru" || m === "choice-en-ru"; }
+function escapeHtml(s){ return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function today(){ const d = new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function simpleHash(s){ let h=0; s=String(s); for(let i=0;i<s.length;i++) h = (h*31 + s.charCodeAt(i))|0; return (h>>>0).toString(36); }
+function ensureSetId(set){
+  if(!set.i) set.i = "s" + simpleHash((set.n||"") + "|" + (set.w||[]).length + "|" + ((set.w||[]).map(r=>r[0]).join(",")));
+  return set;
+}
+function fmtDate(iso){ const d = new Date(iso); return d.toLocaleDateString("ru-RU") + " " + d.toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}); }
+function fmtDateShort(iso){ try{ return new Date(iso).toLocaleDateString("ru-RU"); }catch(e){ return ""; } }
+function fmtTime(s){ const m=Math.floor(s/60), sec=s%60; return String(m).padStart(2,"0")+":"+String(sec).padStart(2,"0"); }
+function csvEscape(v){ const s = String(v ?? ""); return /[;"\r\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s; }
+
+const $ = id => document.getElementById(id);
+const entry=$("entry"), game=$("game"), finish=$("finish");
+
+/* ===== СОСТОЯНИЕ ===== */
+let activeSet = null, pupil = "";
+let prefs = {mode:"ru-en", verbForm:"all", wordOrder:"fixed", timed:false, timeLimit:120};
+let words = [], wordsOriginal = [], idx = 0, score = 0, mode = "ru-en", verbForm = "all", wordOrder = "fixed";
+let timed = false, timeLimit = 120, timeEndAt = 0, pausedLeft = 0, pausedAt = 0, timerPaused = false, timerInterval = null, lastTick = null;
+let stats = [], cur = null, wordStartAt = 0, sessionStart = 0, hintsUsed = 0, finishedByTime = false;
+let lastErrors = [], gen = 0, onlyErrors = false;
+
+/* ===== ХРАНИЛИЩА ===== */
+const LS_HISTORY = "motya_history_v1", LS_PUPILS = "motya_pupils_v1", LS_PREFS = "motya_prefs_v1";
+const LS_LEGACY = "motya_last_dict_v1", LS_RECORDS = "motya_records_v1";
+
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
+function loadHistory(){ try{ return JSON.parse(lsGet(LS_HISTORY) || "[]") || []; }catch(e){ return []; } }
+function saveHistory(h){ lsSet(LS_HISTORY, JSON.stringify(h)); }
+function loadPupils(){ try{ return JSON.parse(lsGet(LS_PUPILS) || "[]") || []; }catch(e){ return []; } }
+function savePupils(p){ lsSet(LS_PUPILS, JSON.stringify(p)); }
+function loadPrefs(){ try{ return Object.assign(prefs, JSON.parse(lsGet(LS_PREFS) || "{}")); }catch(e){} }
+function savePrefs(){ lsSet(LS_PREFS, JSON.stringify(prefs)); }
+
+/* ===== МОД ЗВУКА ===== */
+$("mute").addEventListener("click", ()=>{
+  const nowMuted = !SFX.isMuted(); SFX.setMuted(nowMuted);
+  $("mute").textContent = nowMuted ? "🔇" : "🔊";
+  if(!nowMuted) SFX.playHint();
+});
+
+/* ===== ЭКРАН ВХОДА ===== */
+function rememberSet(set, src){
+  ensureSetId(set);
+  if(!set.n) set.n = "Набор " + fmtDateShort(new Date().toISOString());
+  if(!set.d) set.d = today();
+  const h = loadHistory();
+  const i = h.findIndex(x => x.i === set.i);
+  const rec = {i:set.i, n:set.n, d:set.d, last:Date.now(), src:src || "код", w:set.w};
+  if(i >= 0) h[i] = Object.assign(h[i] || {}, rec);
+  else h.unshift(rec);
+  saveHistory(h.slice(0, 40));
+  activeSet = set;
+}
+function acceptSet(set, src){
+  const known = loadHistory().find(x => x.i === set.i);
+  const diff = known ? diffSets(known, set) : null;
+  rememberSet(set, src);
+  $("gotDiff").style.display = "none";
+  renderEntry();
+  if(diff && (diff.added || diff.changed)){
+    const parts = [];
+    if(diff.added) parts.push("+" + diff.added + " новых слов");
+    if(diff.changed) parts.push(diff.changed + " изменено");
+    $("gotDiff").style.display = "";
+    $("gotDiff").innerHTML = "🔄 Набор обновлён: " + escapeHtml(parts.join(", ")) + ". Прогресс по прежним словам сохранён.";
+  }
+}
+function renderEntry(){
+  const h = loadHistory();
+  $("histCount").textContent = h.length ? "(" + h.length + ")" : "";
+  $("gotBox").style.display = activeSet ? "" : "none";
+  if(activeSet){
+    $("gotName").textContent = activeSet.n;
+    const sum = progressSummary(activeSet.i, pupil || guessPupil(), activeSet.w);
+    $("gotMeta").textContent = (activeSet.w||[]).length + " слов · освоено " + sum.learned + " из " + sum.total
+      + (sum.sessions ? " · занятий: " + sum.sessions : "");
+  }
+  const list = $("histList");
+  list.innerHTML = "";
+  if(!h.length){
+    list.innerHTML = '<div class="muted" style="margin-top:8px">Пока пусто. Откройте присланную преподавателем ссылку или нажмите «добавить набор».</div>';
+  }
+  h.forEach(rec=>{
+    const sum = progressSummary(rec.i, pupil || guessPupil(), rec.w || []);
+    const div = document.createElement("div");
+    div.className = "set-item";
+    const pct = sum.total ? Math.round(sum.learned/sum.total*100) : 0;
+    div.innerHTML =
+      '<div class="t"><b>' + escapeHtml(rec.n) + '</b>'
+      + '<span class="muted">' + (rec.w ? rec.w.length : 0) + ' слов · освоено ' + sum.learned + '</span>'
+      + '<div class="progress-mini"><div style="width:' + pct + '%"></div></div>'
+      + '<span class="muted" style="font-size:11px">' + (rec.src ? escapeHtml(rec.src) + " · " : "") + fmtDateShort(rec.last) + '</span></div>';
+    const bPlay = document.createElement("button");
+    bPlay.className = "small"; bPlay.textContent = "Играть";
+    bPlay.onclick = ()=>{ activeSet = ensureSetId({i:rec.i, n:rec.n, d:rec.d, w:rec.w || []}); renderEntry(); showGameBtn(); };
+    const bDel = document.createElement("button");
+    bDel.className = "ghost small"; bDel.textContent = "✕"; bDel.title = "Убрать из списка";
+    bDel.onclick = ()=>{ if(!confirm("Убрать набор «" + rec.n + "» из списка? Прогресс сохранится.")) return;
+      saveHistory(loadHistory().filter(x => x.i !== rec.i)); if(activeSet && activeSet.i === rec.i) activeSet = null; renderEntry(); };
+    div.appendChild(bPlay); div.appendChild(bDel);
+    list.appendChild(div);
+  });
+  const pl = loadPupils();
+  $("pupils").innerHTML = pl.map(n => '<option value="' + escapeHtml(n) + '">').join("");
+}
+function guessPupil(){ return $("pupil").value.trim(); }
+function showGameBtn(){ $("start").textContent = "▶ Начать"; }
+
+$("btnNewSet").addEventListener("click", ()=>{
+  const box = $("addBox");
+  box.style.display = box.style.display === "none" ? "" : "none";
+  if(box.style.display !== "none") $("code").focus();
+});
+$("useCode").addEventListener("click", ()=>{
+  const raw = $("code").value.trim();
+  if(!raw){ $("addStatus").textContent = "Вставьте код набора."; return; }
+  try{
+    acceptSet(unpackSet(raw), "код");
+    $("code").value = "";
+    $("addStatus").textContent = "✅ Набор загружен.";
+    $("addBox").style.display = "none";
+  }catch(e){
+    $("addStatus").textContent = "⚠️ " + (e.message || "код не читается");
+  }
+});
+$("setFile").addEventListener("change", e => { const f = e.target.files[0]; if(f) readSetFile(f); e.target.value = ""; });
+["dragover","drop"].forEach(ev=> window.addEventListener(ev, e=>{
+  e.preventDefault();
+  if(ev !== "drop") return;
+  const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if(f) readSetFile(f);
+}));
+function readSetFile(f){
+  const r = new FileReader();
+  r.onload = ()=>{
+    const text = String(r.result || "");
+    if(text.trim().startsWith(FMT + ".")){
+      try{ acceptSet(unpackSet(text), "файл"); $("addStatus").textContent = "✅ Набор загружен из файла."; $("addBox").style.display = "none"; return; }
+      catch(e){ $("addStatus").textContent = "⚠️ " + e.message; return; }
+    }
+    const res = parseText(text);
+    if(!res.ok.length){ $("addStatus").textContent = "⚠️ В файле не найдено слов."; return; }
+    const set = {i:"", n:f.name.replace(/\.[^.]+$/,""), d:today(),
+                 w:res.ok.map(w => [w.ru, w.en.join("|"), w.trans.join("|"), ""])};
+    ensureSetId(set);
+    acceptSet(set, "файл");
+    $("addStatus").textContent = "✅ Из файла «" + f.name + "»: " + res.ok.length + " слов"
+      + (res.rejected.length ? ", отброшено " + res.rejected.length : "") + ".";
+    $("addBox").style.display = "none";
+  };
+  r.readAsText(f, "utf-8");
+}
+window.addEventListener("hashchange", ()=>{ tryLink(); });
+
+function tryLink(){
+  const got = readSetFromLocation();
+  if(!got) return false;
+  if(got.error){
+    $("addStatus").textContent = "⚠️ " + got.error;
+    $("addBox").style.display = "";
+    $("entryStatus").textContent = "⚠️ " + got.error;
+    return false;
+  }
+  acceptSet(got, "ссылка");
+  $("entryStatus").textContent = "✅ Набор «" + got.n + "» получен по ссылке.";
+  return true;
+}
+
+/* наследие: словарь из пробной версии */
+function checkLegacy(){
+  const raw = lsGet(LS_LEGACY);
+  if(!raw) return;
+  const res = parseText(raw);
+  if(!res.ok.length) return;
+  $("legacyBox").style.display = "";
+  $("legacyMeta").textContent = "Найден сохранённый словарь из пробной версии: " + res.ok.length + " слов.";
+}
+$("useLegacy").addEventListener("click", ()=>{
+  const res = parseText(lsGet(LS_LEGACY) || "");
+  if(!res.ok.length) return;
+  acceptSet({i:"", n:"Словарь из пробной версии", d:today(),
+             w:res.ok.map(w => [w.ru, w.en.join("|"), w.trans.join("|"), ""])}, "импорт");
+  $("legacyBox").style.display = "none";
+});
+$("dropLegacy").addEventListener("click", ()=>{ $("legacyBox").style.display = "none"; });
+
+/* настройки */
+$("mode").addEventListener("change", e=>{
+  const m = e.target.value;
+  $("verbFormLabel").style.display = (m === "ru-en" || m === "choice") ? "" : "none";
+});
+$("timedMode").addEventListener("change", e=>{ $("timeLabel").style.display = e.target.checked ? "" : "none"; });
+function applyPrefsToUi(){
+  $("mode").value = prefs.mode; $("verbForm").value = prefs.verbForm;
+  $("wordOrder").value = prefs.wordOrder;
+  $("timedMode").checked = !!prefs.timed;
+  $("timeLimit").value = String(prefs.timeLimit);
+  $("timeLabel").style.display = prefs.timed ? "" : "none";
+  $("verbFormLabel").style.display = (prefs.mode === "ru-en" || prefs.mode === "choice") ? "" : "none";
+}
+function readPrefs(){
+  prefs.mode = $("mode").value; prefs.verbForm = $("verbForm").value;
+  prefs.wordOrder = $("wordOrder").value; prefs.timed = $("timedMode").checked;
+  prefs.timeLimit = parseInt($("timeLimit").value, 10) || 120;
+  savePrefs();
+}
+
+/* ===== СТАРТ ИГРЫ ===== */
+function buildWords(useRandom){
+  const arr = useRandom ? shuffle(wordsOriginal) : wordsOriginal.slice();
+  words = arr.map(w => Object.assign({}, w, {_i: wordsOriginal.indexOf(w)}));
+}
+$("start").addEventListener("click", ()=>{
+  SFX.ensure();
+  if(!activeSet){ alert("Сначала добавьте набор: откройте ссылку преподавателя или вставьте код."); $("addBox").style.display = ""; return; }
+  const all = rowsToWords(activeSet.w);
+  wordsOriginal = all.filter(w => w.ru && w.en.length);
+  if(!wordsOriginal.length){ alert("В наборе нет слов."); return; }
+  const broken = all.length - wordsOriginal.length;
+  $("entryStatus").textContent = broken ? "⚠️ Пропущено строк без слова: " + broken + "." : "";
+  pupil = $("pupil").value.trim();
+  if(!pupil){
+    pupil = prompt("Как тебя зовут? Имя нужно, чтобы сохранять твой прогресс:", "") || "";
+    $("pupil").value = pupil;
+  }
+  if(!pupil){ alert("Введите имя — иначе прогресс не сохранится."); $("pupil").focus(); return; }
+  const pl = loadPupils();
+  if(!pl.includes(pupil)){ pl.push(pupil); savePupils(pl); }
+
+  readPrefs();
+  mode = prefs.mode; verbForm = prefs.verbForm; wordOrder = prefs.wordOrder;
+  timed = prefs.timed; timeLimit = prefs.timeLimit;
+
+  onlyErrors = false;
+  buildWords(wordOrder === "random");
+  resetSession();
+  entry.style.display = "none"; finish.style.display = "none"; game.style.display = "block";
+  drawWeb(); render();
+  if(!isChoiceMode(mode)) $("answer").focus();
+  if(timed) timerStart(); else $("timerBox").style.display = "none";
+});
+function resetSession(){
+  idx = 0; score = 0; hintsUsed = 0; stats = []; cur = null;
+  finishedByTime = false; lastErrors = []; gen++;
+  sessionStart = Date.now();
+  $("bar").style.width = "0%";
+}
+$("btnPreview").addEventListener("click", ()=>{
+  if(!activeSet){ alert("Сначала добавьте набор."); return; }
+  const res = parseText(setToRows(activeSet).map(r => r.join(";")).join("\n"));
+  showPreview(activeSet.n, res);
+});
+function showPreview(title, res){
+  const okRows = res.ok.map(w => "<tr><td>" + escapeHtml(w.ru) + "</td><td>" + escapeHtml(w.en.join(" / ")) + "</td><td>" + escapeHtml(w.trans.filter(Boolean).join("  ")) + "</td></tr>").join("");
+  const badRows = res.rejected.map(x => "<div><b>⚠ " + escapeHtml(x.reason) + "</b> — " + escapeHtml(x.raw) + "</div>").join("");
+  entry.innerHTML = '<div class="row" style="justify-content:space-between"><b>Предпросмотр: ' + escapeHtml(title) + '</b>'
+    + '<button class="ghost small" id="prevBack">← Назад</button></div>'
+    + '<div class="muted" style="margin-top:6px">Распознано слов: <b>' + res.ok.length + '</b>'
+    + (res.rejected.length ? ' · отброшено: <b class="err-words">' + res.rejected.length + '</b>' : '') + '</div>'
+    + '<div style="max-height:46vh;overflow:auto"><table class="prev-tbl"><tr><th>Русский</th><th>English</th><th>Транскрипция</th></tr>' + okRows + '</table></div>'
+    + (badRows ? '<div class="muted" style="margin-top:10px">Не распознано:</div><div class="err-list">' + badRows + '</div>' : '')
+    + '<div class="hint" style="margin-top:10px">Если какие-то строки отброшены — поправьте их у преподавателя и попросите прислать набор заново.</div>';
+  $("prevBack").onclick = ()=>{ location.reload(); };
+}
+
+/* ===== ТАЙМЕР С ПАУЗОЙ НА ОБРАТКУ СВЯЗИ ===== */
+function remainingMs(){ if(!timed) return 0; return timerPaused ? pausedLeft : Math.max(0, timeEndAt - Date.now()); }
+function updateTimer(left){
+  if(left == null) left = Math.max(0, Math.round(remainingMs()/1000));
+  const m = Math.floor(left/60), s = left%60;
+  $("timer").textContent = String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+  $("timerBox").classList.toggle("warn", left <= 10);
+  if(left <= 10 && left > 0 && lastTick !== left){ SFX.playTick(); lastTick = left; }
+}
+function tick(){
+  const left = Math.max(0, Math.round(remainingMs()/1000));
+  updateTimer(left);
+  if(left <= 0){ timerStop(); finishedByTime = true; finishGame(); }
+}
+function timerStart(){
+  timeEndAt = Date.now() + timeLimit*1000; timerPaused = false; lastTick = null;
+  $("timerBox").style.display = "";
+  timerStop(); timerInterval = setInterval(tick, 250); updateTimer();
+}
+function timerPause(){
+  if(!timed || timerPaused) return;
+  timerPaused = true; pausedLeft = Math.max(0, timeEndAt - Date.now()); pausedAt = Date.now();
+  timerStop(); updateTimer(Math.round(pausedLeft/1000));
+}
+function timerResume(){
+  if(!timed || !timerPaused) return;
+  timeEndAt += Date.now() - pausedAt; timerPaused = false;
+  timerInterval = setInterval(tick, 250); updateTimer();
+}
+function timerStop(){ clearInterval(timerInterval); timerInterval = null; }
+
+/* ===== ПАУТИНКА ===== */
+function drawWeb(){
+  const svg = $("web"); svg.innerHTML = "";
+  const n = words.length, pad = 40, w = 600-pad*2;
+  const line = document.createElementNS("http://www.w3.org/2000/svg","path");
+  line.setAttribute("class","line");
+  line.setAttribute("d", `M ${pad} 90 Q ${pad+w/2} 40 ${pad+w} 90`);
+  svg.appendChild(line);
+  for(let i=0;i<n;i++){
+    const t = n>1 ? i/(n-1) : 0.5;
+    const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    c.setAttribute("cx", pad + w*t); c.setAttribute("cy", 90 - 50*Math.sin(Math.PI*t));
+    c.setAttribute("r",10); c.setAttribute("class","node"); c.setAttribute("data-i",i);
+    svg.appendChild(c);
+  }
+  const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+  g.setAttribute("id","spider"); g.setAttribute("class","spider");
+  g.innerHTML = '<ellipse cx="0" cy="0" rx="14" ry="10" fill="#1a1a1a"/><circle cx="-12" cy="-4" r="7" fill="#2d2d2d"/><circle cx="-14" cy="-6" r="1.8" fill="#fff"/><circle cx="-10" cy="-6" r="1.8" fill="#fff"/><circle cx="-14" cy="-6" r=".9" fill="#000"/><circle cx="-10" cy="-6" r=".9" fill="#000"/><path d="M-12 4 Q-22 14 -28 10 M-8 6 Q-18 18 -22 22 M-4 8 Q-10 22 -14 28 M0 8 Q0 24 -2 30 M4 8 Q10 22 14 28 M8 6 Q18 18 22 22 M12 4 Q22 14 28 10" stroke="#3a3a3a" stroke-width="1.6" fill="none" stroke-linecap="round"/>';
+  svg.appendChild(g);
+  moveSpider(0, false);
+}
+function nodeXY(i){
+  const n = words.length, pad=40, w=600-pad*2, t = n>1 ? i/(n-1) : 0.5;
+  return {x: pad+w*t, y: 90 - 50*Math.sin(Math.PI*t)};
+}
+function moveSpider(i, animate=true){
+  const p = nodeXY(i), sp = $("spider");
+  sp.style.transition = animate ? "transform .6s cubic-bezier(.5,1.6,.5,1)" : "none";
+  sp.setAttribute("transform", `translate(${p.x} ${p.y-14})`);
+  document.querySelectorAll(".node").forEach(n=>{
+    const k = +n.getAttribute("data-i");
+    n.classList.toggle("done", k<i); n.classList.toggle("current", k===i);
+  });
+  if(animate) SFX.playStep();
+}
+
+/* ===== ФОРМЫ ОТВЕТА ===== */
+function getTargetForm(w){
+  if(mode === "v1-to-all") return w.en[0];
+  if(isEnRuMode(mode)) return w.ru;
+  if(verbForm === "all") return w.en.join(", ");
+  const t = verbForm === "v2" ? 1 : (verbForm === "v3" ? 2 : 0);
+  return w.en[Math.min(t, w.en.length - 1)];
+}
+function getTargetTrans(w){
+  if(!w.trans || !w.trans.length) return null;
+  if(!w.trans.some(t => t && t.length)) return null;
+  if(mode === "v1-to-all") return (w.trans[0] && w.trans[0].length) ? w.trans[0] : null;
+  if(verbForm === "all"){ const ne = w.trans.filter(t => t && t.length); return ne.length ? ne.join("  ") : null; }
+  const t = verbForm === "v2" ? 1 : (verbForm === "v3" ? 2 : 0);
+  const v = w.trans[Math.min(t, w.trans.length - 1)];
+  return (v && v.length) ? v : null;
+}
+
+/* ===== КАРТОЧКИ ВЫБОРА ===== */
+function generateChoices(i){
+  const w = words[i];
+  const correct = getTargetForm(w);
+  const seen = new Set([normalize(correct)]);
+  const opts = [{text: correct, trans: getTargetTrans(w)}];
+  for(const o of shuffle(words.filter((_,k) => k !== i))){
+    if(opts.length >= 4) break;
+    const t = getTargetForm(o), key = normalize(t);
+    if(seen.has(key)) continue;
+    seen.add(key);
+    opts.push({text: t, trans: getTargetTrans(o)});
+  }
+  if(opts.length < 2) return null;
+  return shuffle(opts);
+}
+
+/* ===== ОТРИСОВКА СЛОВА ===== */
+function render(){
+  const w = words[idx];
+  const wantChoice = isChoiceMode(mode);
+  const choices = wantChoice ? generateChoices(idx) : null;
+  const useChoice = !!(choices && choices.length > 1);
+
+  let promptText;
+  if(mode === "ru-en") promptText = w.ru + (verbForm === "all" ? " (введи V1, V2, V3 через запятую)" : " (" + verbForm.toUpperCase() + ")");
+  else if(mode === "choice") promptText = w.ru + (verbForm === "all" ? " (выбери все формы)" : " (" + verbForm.toUpperCase() + ")");
+  else if(mode === "en-ru" || mode === "choice-en-ru") promptText = w.en.join(" / ");
+  else if(mode === "v1-to-all") promptText = w.en[0] + " (введи: V2, V3, перевод)";
+
+  const trans = (mode === "choice") ? null : getTargetTrans(w);
+  $("prompt").innerHTML = escapeHtml(promptText)
+    + (trans ? '<div class="trans">' + escapeHtml(trans) + '</div>' : "");
+  $("counter").textContent = Math.min(idx+1, words.length) + " / " + words.length;
+  $("setTag").textContent = activeSet ? activeSet.n : "";
+  $("score").textContent = score;
+  $("bar").style.width = (stats.length / words.length * 100) + "%";
+  $("fb").textContent = ""; $("fb").className = "feedback";
+
+  $("answer").style.display = useChoice ? "none" : "block";
+  $("check").style.display = useChoice ? "none" : "inline-block";
+  $("hint").style.display = wantChoice ? "" : "";
+  $("choices").style.display = useChoice ? "grid" : "none";
+  $("answer").value = "";
+
+  if(useChoice){
+    $("choices").innerHTML = "";
+    choices.forEach(ch=>{
+      const btn = document.createElement("button");
+      btn.className = "choice-btn";
+      btn.innerHTML = '<div>' + escapeHtml(ch.text) + '</div>'
+        + (ch.trans && !isEnRuMode(mode) ? '<div class="trans">' + escapeHtml(ch.trans) + '</div>' : '');
+      btn.onclick = ()=> handleChoice(btn, ch.text, getTargetForm(w));
+      $("choices").appendChild(btn);
+    });
+    $("hintText").textContent = wantChoice
+      ? "Выбери правильный вариант. Подсказка уберёт два неверных (−2 очка)."
+      : "Выбери правильный вариант.";
+  } else {
+    if(wantChoice) $("hintText").textContent = "Для карточек нужно минимум 2 разных слова в наборе — вводи ответ текстом.";
+    else if(mode === "ru-en") $("hintText").textContent = verbForm === "all" ? "Формы глагола вводятся через запятую: V1, V2, V3" : "Введи только " + verbForm.toUpperCase() + " форму глагола";
+    else if(mode === "en-ru") $("hintText").textContent = "Введи перевод на русский";
+    else if(mode === "v1-to-all") $("hintText").textContent = "Введи через запятую: V2, V3, перевод (например: woke, woken, будить)";
+  }
+
+  moveSpider(idx);
+  cur = {n: idx+1, rowIdx: w._i, key: w.ru, prompt: promptText, answer: getTargetForm(w),
+         attempts: 0, answers: [], ok: null, skipped: false, hints: 0, startAt: Date.now()};
+  wordStartAt = Date.now();
+}
+
+/* ===== ПЕРЕХОД К СЛЕДУЮЩЕМУ СЛОВУ ===== */
+function nextWord(delay){
+  const g = gen;
+  timerPause();
+  setTimeout(()=>{
+    if(g !== gen) return;
+    idx++;
+    if(idx >= words.length){ timerStop(); finishGame(); return; }
+    timerResume();
+    render();
+  }, delay);
+}
+function finishWord(ok, skipped, delay){
+  if(!cur) return;
+  cur.ok = !!ok; cur.skipped = !!skipped;
+  cur.timeSec = Math.max(1, Math.round((Date.now() - cur.startAt)/1000));
+  stats.push(cur);
+  if(!ok) lastErrors.push(cur.rowIdx);
+  $("bar").style.width = (stats.length / words.length * 100) + "%";
+  if(activeSet && pupil) recordWord(activeSet.i, pupil, cur.key, cur.answer, !!ok);
+  if(ok && idx+1 < words.length) moveSpider(idx+1);
+  cur = null;
+  nextWord(delay);
+}
+function fb(ok, text){
+  $("fb").textContent = text;
+  $("fb").className = "feedback " + (ok ? "ok" : "bad");
+}
+function shake(){ const sp = $("spider"); if(!sp) return; sp.classList.add("shake"); setTimeout(()=> sp.classList.remove("shake"), 450); }
+
+/* ===== ПРОВЕРКА ОТВЕТА (ВВОД) ===== */
+function checkAnswerText(user){
+  const w = words[idx];
+  if(mode === "v1-to-all"){
+    const parts = user.split(",").map(normalize).filter(Boolean);
+    if(parts.length !== 3) return false;
+    const v2 = (w.en[1] || "").split("/").map(normalize);
+    const v3 = (w.en[2] || "").split("/").map(normalize);
+    const ru = w.ru.split(",").map(normalize);
+    return v2.includes(parts[0]) && v3.includes(parts[1]) && ru.includes(parts[2]);
+  }
+  if(mode === "en-ru"){
+    return w.ru.split(",").map(normalize).includes(normalize(user));
+  }
+  if(verbForm === "all"){
+    const parts = user.split(",").map(normalize).filter(Boolean);
+    if(parts.length !== w.en.length) return false;
+    return parts.every((p,i) => (w.en[i] || "").split("/").map(normalize).includes(p));
+  }
+  const t = verbForm === "v2" ? 1 : (verbForm === "v3" ? 2 : 0);
+  const idxEn = Math.min(t, w.en.length - 1);
+  return (w.en[idxEn] || "").split("/").map(normalize).includes(normalize(user));
+}
+function doCheck(){
+  const v = $("answer").value.trim();
+  if(!v){ fb(false, "Введи ответ."); SFX.playError(); return; }
+  if(!cur) return;
+  cur.attempts++; cur.answers.push(v);
+  if(checkAnswerText(v)){
+    score += 10; $("score").textContent = score;
+    fb(true, "✅ Верно! Мотя ползёт дальше.");
+    SFX.playCorrect();
+    finishWord(true, false, 1500);
+  } else {
+    fb(false, "❌ Не совсем. Попробуй ещё раз.");
+    SFX.playError(); shake();
+  }
+}
+$("check").addEventListener("click", doCheck);
+$("answer").addEventListener("keydown", e=>{ if(e.key === "Enter"){ e.preventDefault(); doCheck(); } });
+
+/* ===== КАРТОЧКИ ===== */
+function handleChoice(btn, selected, correct){
+  if(!cur) return;
+  const ok = normalize(selected) === normalize(correct);
+  cur.attempts++; cur.answers.push(selected);
+  document.querySelectorAll(".choice-btn").forEach(b => b.disabled = true);
+  if(ok){
+    score += 10; $("score").textContent = score;
+    btn.classList.add("correct");
+    fb(true, "✅ Верно! Мотя ползёт дальше.");
+    SFX.playCorrect();
+    finishWord(true, false, 1500);
+  } else {
+    btn.classList.add("wrong");
+    document.querySelectorAll(".choice-btn").forEach(b=>{
+      const t = b.querySelector("div");
+      if(t && normalize(t.textContent) === normalize(correct)) b.classList.add("correct");
+    });
+    score = Math.max(0, score - 5); $("score").textContent = score;
+    fb(false, "❌ Неверно. Правильно: " + correct);
+    SFX.playError(); shake();
+    finishWord(false, false, 2500);
+  }
+}
+
+/* ===== ПОДСКАЗКА И ПРОПУСК ===== */
+$("hint").addEventListener("click", ()=>{
+  if(!cur) return;
+  cur.hints++; hintsUsed++;
+  score = Math.max(0, score - 2); $("score").textContent = score;
+  SFX.playHint();
+  const w = words[idx];
+  if(isChoiceMode(mode)){
+    const buttons = Array.from(document.querySelectorAll(".choice-btn:not(.hidden-option)"));
+    const correct = getTargetForm(w);
+    const wrong = buttons.filter(b => {
+      const t = b.querySelector("div");
+      return t && normalize(t.textContent) !== normalize(correct);
+    });
+    if(wrong.length >= 2){ shuffle(wrong)[0].classList.add("hidden-option"); shuffle(wrong)[1].classList.add("hidden-option"); }
+    return;
+  }
+  let tip = "";
+  if(mode === "v1-to-all"){
+    const v2 = (w.en[1] || "").split("/")[0], v3 = (w.en[2] || "").split("/")[0], ru = w.ru.split(",")[0];
+    tip = (v2[0]||"") + "…, " + (v3[0]||"") + "…, " + (ru[0]||"") + "…";
+  } else if(mode === "en-ru"){
+    const r = w.ru.split(",")[0]; tip = r[0] + "…".repeat(Math.max(1, r.length-1));
+  } else if(verbForm === "all"){
+    tip = w.en.map(f => { const b = f.split("/")[0]; return b[0] + "…".repeat(Math.max(1, b.length-1)); }).join(", ");
+  } else {
+    const t = verbForm === "v2" ? 1 : (verbForm === "v3" ? 2 : 0);
+    const b = (w.en[Math.min(t, w.en.length - 1)] || "").split("/")[0];
+    tip = b[0] + "…".repeat(Math.max(1, b.length - 1));
+  }
+  $("hintText").textContent = "Подсказка: " + tip;
+});
+$("skip").addEventListener("click", ()=>{
+  if(!cur) return;
+  const w = words[idx];
+  const right = mode === "v1-to-all" ? ((w.en[1]||"?") + ", " + (w.en[2]||"?") + ", " + w.ru) : getTargetForm(w);
+  score = Math.max(0, score - 5); $("score").textContent = score;
+  fb(false, "Пропущено. Правильно: " + right);
+  SFX.playHint();
+  finishWord(false, true, 2500);
+});
+
+/* ===== ВЫХОД И ФИНАЛ ===== */
+$("quit").addEventListener("click", ()=>{
+  gen++; timerStop(); timerPaused = false;
+  game.style.display = "none"; finish.style.display = "none"; entry.style.display = "block";
+  activeSet = null;
+  tryLink();
+  renderEntry(); renderRecords();
+});
+function finishGame(){
+  gen++; timerStop(); timerPaused = false;
+  game.style.display = "none"; finish.style.display = "block";
+  $("bar").style.width = "100%";
+  const answered = stats.length;
+  const ok = stats.filter(s => s.ok).length;
+  const attempts = stats.reduce((a,s) => a + s.attempts, 0);
+  $("finalScore").textContent = score;
+  $("finalCorrect").textContent = ok;
+  $("finalTotal").textContent = finishedByTime ? answered : words.length;
+  $("finalAttempts").textContent = attempts;
+  if(finishedByTime){
+    $("finishTitle").textContent = "⏰ Время вышло!";
+    const left = words.length - answered;
+    $("finishSub").textContent = left > 0 ? "Не успел " + left + " из " + words.length + " слов. Мотя устал, но ты молодец!" : "Мотя устал, но ты молодец!";
+  } else {
+    $("finishTitle").textContent = "🎉 Мотя доволен!";
+    $("finishSub").textContent = onlyErrors ? "Ты разобрал ошибки — это и есть настоящая победа." : "Ты прошёл всю паутинку.";
+    SFX.playFinish();
+  }
+  if(activeSet && pupil){
+    recordSession(activeSet.i, pupil, {t: Date.now(), mode, verbForm, wordOrder, timed,
+      score, correct: ok, total: answered, planned: words.length, sec: Math.round((Date.now()-sessionStart)/1000),
+      hints: hintsUsed, finishedByTime});
+    const sum = progressSummary(activeSet.i, pupil, activeSet.w);
+    $("mastery").textContent = "Освоено слов в наборе «" + activeSet.n + "»: " + sum.learned + " из " + sum.total;
+  } else $("mastery").textContent = "";
+
+  const wrong = stats.filter(s => !s.ok);
+  $("wrongList").innerHTML = wrong.length
+    ? '<div class="muted">Стоит повторить: ' + wrong.length + ' из ' + stats.length + '.</div>'
+      + '<div class="err-list">' + wrong.map(s =>
+          '<div><b>' + escapeHtml(s.key) + '</b> — правильно: ' + escapeHtml(s.answer)
+          + (s.attempts > 1 ? ' <span class="muted">(' + s.attempts + ' ' + plural(s.attempts,"попытка","попытки","попыток") + ')</span>' : '')
+          + '</div>').join('') + '</div>'
+    : '<div class="muted">Ошибок нет — все слова отвечены с первого раза.</div>';
+  $("againErr").style.display = lastErrors.length ? "" : "none";
+
+  saveRecord(answered, ok);
+  renderEntry(); renderRecords();
+}
+function plural(n, one, few, many){
+  const a = Math.abs(n) % 100, b = a % 10;
+  if(a > 10 && a < 20) return many;
+  if(b > 1 && b < 5) return few;
+  if(b === 1) return one;
+  return many;
+}
+$("again").addEventListener("click", ()=>{
+  onlyErrors = false;
+  buildWords(wordOrder === "random");
+  resetSession();
+  finish.style.display = "none"; game.style.display = "block"; drawWeb(); render();
+  if(!isChoiceMode(mode)) $("answer").focus();
+  if(timed) timerStart(); else $("timerBox").style.display = "none";
+});
+$("againErr").addEventListener("click", ()=>{
+  const set = new Set(lastErrors);
+  wordsOriginal = wordsOriginal.filter((w,i) => set.has(wordsOriginal.indexOf(w)));
+  onlyErrors = true;
+  buildWords(false);
+  resetSession();
+  finish.style.display = "none"; game.style.display = "block"; drawWeb(); render();
+  if(!isChoiceMode(mode)) $("answer").focus();
+  if(timed) timerStart(); else $("timerBox").style.display = "none";
+});
+$("againMenu").addEventListener("click", ()=>{
+  finish.style.display = "none"; entry.style.display = "block";
+  activeSet = null; tryLink(); renderEntry(); renderRecords();
+});
+
+/* ===== РЕКОРДЫ ===== */
+function loadRecords(){ try{ return JSON.parse(lsGet(LS_RECORDS) || "[]") || []; }catch(e){ return []; } }
+function saveRecord(answered, ok){
+  try{
+    const recs = loadRecords();
+    recs.push({name: pupil, date: new Date().toISOString(), set: activeSet ? activeSet.n : "", setId: activeSet ? activeSet.i : "",
+      mode, verbForm, wordOrder, timed, total: answered, planned: words.length, correct: ok,
+      pct: answered ? Math.round(ok/answered*100) : 0, perWord: answered ? Math.round(score/answered*10)/10 : 0,
+      score, time: Math.round((Date.now()-sessionStart)/1000), hints: hintsUsed, finishedByTime});
+    recs.sort((a,b) => b.pct - a.pct || b.perWord - a.perWord || a.time - b.time);
+    lsSet(LS_RECORDS, JSON.stringify(recs.slice(0,50)));
+  }catch(e){}
+}
+function modeLabel(m, vf, wo){
+  vf = vf || "all"; wo = wo || "fixed";
+  let base;
+  if(m === "ru-en") base = vf === "all" ? "RU → EN" : "RU → EN (" + vf.toUpperCase() + ")";
+  else if(m === "choice") base = "👁️ RU → EN" + (vf !== "all" ? " (" + vf.toUpperCase() + ")" : "");
+  else if(m === "en-ru") base = "EN → RU";
+  else if(m === "choice-en-ru") base = "👁️ EN → RU";
+  else if(m === "v1-to-all") base = "🎯 V1 → V2, V3, RU";
+  else base = m;
+  if(wo === "random") base += " 🎲";
+  return base;
+}
+function renderRecordsTable(container){
+  const recs = loadRecords();
+  if(!recs.length){ container.innerHTML = "<div class='muted'>Пока пусто. Сыграй первую игру!</div>"; return; }
+  const best = new Map();
+  recs.forEach(r => { if(!best.has(r.mode)) best.set(r.mode, r.score); });
+  let html = "<table class='records'><thead><tr><th>#</th><th>Имя</th><th>Дата</th><th>Набор</th><th>%</th><th>Очки</th><th>Верно</th><th>Время</th></tr></thead><tbody>";
+  recs.slice(0,10).forEach((r,i)=>{
+    const top = best.get(r.mode) === r.score;
+    html += "<tr" + (top ? ' style="background:#f3fbf3"' : "") + "><td>" + (i+1) + "</td><td>" + escapeHtml(r.name)
+      + "</td><td>" + fmtDate(r.date) + "</td><td>" + escapeHtml(r.set || "—") + " " + modeLabel(r.mode, r.verbForm, r.wordOrder)
+      + (r.timed ? " ⏱" : "") + "</td><td><b>" + (r.pct != null ? r.pct + "%" : "—") + "</b></td><td>" + r.score
+      + "</td><td>" + r.correct + "/" + r.total + "</td><td>" + fmtTime(r.time) + "</td></tr>";
+  });
+  html += "</tbody></table>";
+  if(recs.length > 10) html += '<div class="muted" style="margin-top:6px">Показаны лучшие 10 из ' + recs.length + ".</div>";
+  html += '<div style="margin-top:8px"><button class="ghost small" id="clearRec">Очистить рекорды</button></div>';
+  container.innerHTML = html;
+  container.querySelector("#clearRec").addEventListener("click", ()=>{
+    if(confirm("Удалить все рекорды?")){ lsSet(LS_RECORDS, "[]"); renderRecords(); }
+  });
+}
+function renderRecords(){ renderRecordsTable($("recordsHere")); renderRecordsTable($("recordsFinish")); }
+
+/* ===== ОТЧЁТ ДЛЯ УЧИТЕЛЯ ===== */
+$("exportCsv").addEventListener("click", ()=>{
+  const s = ";";
+  const answered = stats.length;
+  const ok = stats.filter(x => x.ok).length;
+  const attempts = stats.reduce((a,x) => a + x.attempts, 0);
+  const L = [];
+  L.push(["Отчёт по игре «Мотя учит слова»"].join(s));
+  L.push(["Ученик", pupil].join(s));
+  L.push(["Набор", activeSet ? activeSet.n : "—"].join(s));
+  L.push(["Дата", new Date().toLocaleString("ru-RU")].join(s));
+  L.push(["Режим", modeLabel(mode, verbForm, wordOrder)].join(s));
+  L.push(["Порядок слов", wordOrder === "random" ? "случайный" : "по порядку"].join(s));
+  L.push(["С таймером", timed ? "да" : "нет"].join(s));
+  L.push(["Время игры", fmtTime(Math.round((Date.now()-sessionStart)/1000))].join(s));
+  L.push(["Очки", score].join(s));
+  L.push(["Правильных ответов", ok + " из " + answered].join(s));
+  if(finishedByTime) L.push(["Не успел", (words.length - answered) + " из " + words.length].join(s));
+  L.push(["Подсказок", hintsUsed].join(s));
+  L.push(["Попыток на слова", attempts].join(s));
+  L.push([""].join(s));
+  L.push(["№","Слово","Правильный ответ","Ответы ученика","Верно","Попыток","Время (с)"].join(s));
+  stats.forEach(x => L.push([x.n, x.key, x.answer, x.answers.join(" | "), x.ok ? "да" : (x.skipped ? "пропущено" : "нет"), x.attempts, x.timeSec].map(csvEscape).join(s)));
+  if(finishedByTime){
+    L.push([""].join(s));
+    L.push(["Не дойденные слова"].join(s));
+    for(let i = answered; i < words.length; i++) L.push([words[i].ru, words[i].en.join(" / ")].map(csvEscape).join(s));
+  }
+  if(activeSet && pupil){
+    const p = getProgress(activeSet.i, pupil);
+    const un = Object.values(p.w || {}).filter(e => !e.last);
+    L.push([""].join(s));
+    L.push(["Нужно повторить (по всем занятиям)", un.length].join(s));
+    un.forEach(e => L.push([e.ru, e.en, "верно " + (e.ok||0) + " из " + (e.a||0) + " " + plural(e.a||0,"занятия","занятий","занятий")].map(csvEscape).join(s)));
+  }
+  L.push([""].join(s));
+  L.push(["Полный набор (порядок преподавателя)"].join(s));
+  rowsToWords(activeSet ? activeSet.w : []).forEach((w,i)=>{
+    L.push([i+1, w.ru, w.en.join(" / "), w.trans.filter(Boolean).join(" / ")].map(csvEscape).join(s));
+  });
+  const name = "motya_" + (pupil||"uchenik").replace(/[^\wа-яёА-ЯЁ\- ]/g,"") + "_" + new Date().toISOString().slice(0,16).replace(/[:T]/g,"-") + ".csv";
+  download(name, "\uFEFF" + L.join("\r\n"), "text/csv");
+});
+
+/* ===== СТАРТ ===== */
+loadPrefs(); applyPrefsToUi();
+renderEntry(); renderRecords(); checkLegacy();
+if(!tryLink()) renderEntry();
+</script>
+</body>
+</html>

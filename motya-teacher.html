@@ -1,0 +1,1198 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Мотя — наборы для преподавателя 🕷️</title>
+<style>
+  :root{
+    --bg1:#eaf6ea; --bg2:#d8ecd8; --ink:#2e5d3a;
+    --accent:#8fc79a; --accent2:#bfe0c4; --warn:#e8a5a5; --ok:#a9d9b0;
+    --btn:#39804f; --btn-shadow:#2a6b3e;
+    --shadow:0 6px 18px rgba(46,93,58,.12);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:linear-gradient(160deg,var(--bg1),var(--bg2));min-height:100vh}
+  .wrap{max-width:980px;margin:0 auto;padding:18px}
+  h1{margin:0;font-size:25px}
+  h1 small{display:block;font-weight:400;font-size:13px;opacity:.7;margin-top:4px}
+  .card{background:#fff;border-radius:18px;padding:16px 18px;box-shadow:var(--shadow);margin:12px 0}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  button, .btn{background:var(--btn);color:#fff;border:0;border-radius:12px;padding:10px 14px;font-size:15px;cursor:pointer;box-shadow:0 3px 0 var(--btn-shadow);min-height:44px}
+  button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--btn-shadow)}
+  button:disabled{opacity:.5;cursor:default;transform:none;box-shadow:none}
+  button.ghost{background:#fff;color:var(--ink);box-shadow:0 3px 0 #cfe3d2;border:1px solid #cfe3d2}
+  button.small{padding:6px 11px;font-size:13px;min-height:34px}
+  button.danger{background:#fff;color:#a33;box-shadow:0 3px 0 #e0c0c0;border:1px solid #e0c0c0}
+  input[type=text], textarea, select{border:1px solid #cfe3d2;border-radius:12px;padding:9px 12px;font-size:16px;background:#f7fbf7;color:var(--ink);width:100%}
+  textarea{min-height:80px;font-family:ui-monospace,Consolas,monospace;font-size:13px;resize:vertical}
+  label.opt{display:block;margin:12px 0 4px;font-size:13px;opacity:.75}
+  .muted{opacity:.7;font-size:13px}
+  .hint{font-size:12px;color:#5a7a60;margin-top:6px}
+  .tag{display:inline-block;background:var(--accent2);color:var(--ink);border-radius:999px;padding:3px 10px;font-size:12px;margin-right:6px}
+  .btn-file{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--ink);border:1px solid #cfe3d2;border-radius:12px;padding:9px 14px;font-size:14px;cursor:pointer;box-shadow:0 3px 0 #cfe3d2;text-decoration:none;min-height:42px}
+  .set-item{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1px solid #e3efe3;border-radius:12px;padding:10px 12px;margin-top:8px;background:#fbfefb}
+  .set-item.sel{border-color:var(--accent);background:#f3fbf4;box-shadow:0 0 0 2px #d9efe0}
+  .set-item .t{flex:1;min-width:160px}
+  .set-item .t b{display:block}
+  .edit{width:100%;border-collapse:collapse;font-size:14px}
+  .edit th{background:var(--accent2);font-weight:600;text-align:left;padding:6px 8px;position:sticky;top:0}
+  .edit td{padding:3px 5px;border-bottom:1px solid #eef4ee}
+  .edit input{padding:7px 9px;font-size:14px;border-radius:9px}
+  .edit td.n{text-align:right;color:#a33;width:34px}
+  .edit tr.bad td input{background:#fff3f3;border-color:#e8a5a5}
+  .edit td.sel,.edit th.sel{width:30px;text-align:center;padding:3px 2px}
+  .edit td.sel input,.edit th.sel input{width:16px;height:16px;padding:0;accent-color:#39804f;cursor:pointer}
+  .edit tr.selected td{background:#f2faf3}
+  .banner{background:#fff7d6;border:1px solid #e8d48a;border-radius:14px;padding:12px 14px}
+  .err{background:#fff3f3;border:1px solid #e8a5a5;border-radius:12px;padding:10px 12px;margin-top:10px;font-size:13px}
+  .err b{color:#a33}
+  .err-list{max-height:170px;overflow:auto;margin-top:6px}
+  .err-list div{padding:4px 6px;border-bottom:1px solid #f0f4f0}
+  .prev-tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+  .prev-tbl th,.prev-tbl td{padding:5px 7px;border-bottom:1px solid #eef4ee;text-align:left}
+  .prev-tbl th{background:#f2faf3}
+  .trans{font-family:"Lucida Sans Unicode","Arial Unicode MS","Segoe UI Symbol",sans-serif;font-style:italic}
+  .saved-badge{display:inline-block;background:#fff3c4;color:#7a5a00;border-radius:999px;padding:2px 9px;font-size:11px;opacity:0;transition:opacity .3s}
+  .saved-badge.show{opacity:1}
+  details{margin-top:10px}
+  summary{cursor:pointer;font-weight:600}
+  .count-ok{color:#2f7a3f}
+  :focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="row" style="justify-content:space-between;align-items:flex-start">
+  <h1>🕷️ Мотя — наборы для преподавателя
+    <small>здесь вы готовите словарь и выдаёте его ученику ссылкой или кодом. Ученик играет в файле motya.html — он у него уже есть.</small>
+  </h1>
+  <a class="btn-file" href="motya.html" target="_blank" rel="noopener">Ученический файл ↗</a>
+</header>
+
+<div id="banner" class="banner" style="display:none;margin-top:12px">
+  <b>Словарь из пробной версии</b>
+  <div class="muted" id="bannerText" style="margin-top:4px"></div>
+  <div class="row" style="margin-top:8px">
+    <button id="importLegacy" class="small">Импортировать как набор</button>
+    <button class="ghost small" id="hideLegacy">Скрыть</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="row" style="justify-content:space-between">
+    <div><span class="tag">наборы</span><b id="setsCount"></b></div>
+    <div class="row">
+      <button id="newEmpty">+ Пустой набор</button>
+      <button id="newFromBase">+ Из базы глаголов</button>
+      <label class="btn-file">📂 Загрузить файл<input type="file" id="loadFile" accept=".json,.csv,.txt,.tsv" hidden></label>
+    </div>
+  </div>
+  <div id="setList"></div>
+
+  <details>
+    <summary>Вставить набор текстом (CSV / TSV / JSON / «|»)</summary>
+    <textarea id="pasteBox" style="margin-top:8px" placeholder="Вставьте сюда текст с вашим словарём.
+
+Можно так:
+Русский;V1;Транскрипция V1;V2;Транскрипция V2;V3;Транскрипция V3
+будить;wake;[weɪk];woke;[wəʊk];woken;[ˈwəʊkən]
+
+Или проще — через | :
+будить | wake | woke | woken
+
+Или JSON: {&quot;ru&quot;:&quot;будить&quot;,&quot;en&quot;:[&quot;wake&quot;,&quot;woke&quot;,&quot;woken&quot;],&quot;trans&quot;:[&quot;[weɪk]&quot;,&quot;[wəʊk]&quot;,&quot;[ˈwəʊkən]&quot;]}"></textarea>
+    <div class="row" style="margin-top:8px">
+      <button id="pasteGo">Разобрать и показать</button>
+      <button class="ghost small" id="pasteClear">Очистить</button>
+      <span id="pasteStatus" class="muted"></span>
+    </div>
+    <div id="pastePreview"></div>
+  </details>
+</div>
+
+<div class="card" id="editorCard" style="display:none">
+  <div class="row">
+    <label style="flex:1;min-width:220px">Название набора
+      <input type="text" id="setName" style="margin-top:4px">
+    </label>
+    <label style="width:170px">Дата
+      <input type="text" id="setDate" style="margin-top:4px">
+    </label>
+    <span id="saveBadge" class="saved-badge">сохранено</span>
+  </div>
+  <div id="setMeta" class="muted" style="margin-top:8px"></div>
+  <div class="row" style="margin-top:8px">
+    <input type="text" id="rowFilter" placeholder="поиск по строкам: русское или английское слово" style="flex:1;min-width:220px">
+    <select id="rowSort" style="width:auto;min-width:200px" title="Порядок строк в таблице">
+      <option value="">Порядок: как в наборе</option>
+      <option value="ru-asc">По русскому: А → Я</option>
+      <option value="ru-desc">По русскому: Я → А</option>
+      <option value="en-asc">По английскому: A → Z</option>
+      <option value="en-desc">По английскому: Z → A</option>
+      <option value="note-asc">По заметкам: А → Я</option>
+      <option value="note-desc">По заметкам: Я → А</option>
+    </select>
+    <select id="noteFilter" style="width:auto;min-width:210px" title="Фильтр по полю «Заметка для себя»">
+      <option value="">Заметки: все</option>
+      <option value="unsent">Только не отправленные</option>
+      <option value="sent">Только отправленные</option>
+      <option value="with">С заметкой</option>
+      <option value="without">Без заметки</option>
+    </select>
+    <span id="filterCount" class="muted"></span>
+  </div>
+  <div class="row" style="margin-top:10px">
+    <button id="addRow">+ Строка</button>
+    <button class="ghost small" id="pasteInto">Вставить в конец</button>
+    <button class="danger small" id="delSelected" disabled>Удалить выбранные</button>
+    <button class="ghost small" id="markSent" disabled title="Дописать в заметку отметку «✓ дд.мм.гггг»">✓ Отметить отправленными</button>
+    <button class="ghost small" id="unmarkSent" disabled title="Убрать отметку из заметок выбранных строк">Снять отметку</button>
+    <span id="selCount" class="muted"></span>
+    <span id="markStat" class="muted"></span>
+    <button class="ghost small" id="dlJson">⬇ Набор в JSON</button>
+    <button class="ghost small" id="dlCsv">⬇ Набор в CSV</button>
+    <button class="ghost small" id="dupSelected" disabled title="Создать новый набор только из выбранных строк">⧉ Копировать выбранные</button>
+    <button class="ghost small" id="dupSet" style="margin-left:auto">⧉ Копировать набор</button>
+    <button class="danger small" id="delSet">✕ Удалить набор</button>
+  </div>
+  <div style="overflow:auto;max-height:54vh;margin-top:8px;border:1px solid #eef4ee;border-radius:12px">
+    <table class="edit">
+      <thead><tr>
+        <th style="width:20%">Русский</th>
+        <th style="width:28%">Английские формы (через |)</th>
+        <th style="width:28%">Транскрипции (через |)</th>
+        <th style="width:16%">Заметка для себя</th>
+        <th class="sel"><input type="checkbox" id="selAll" title="Выбрать все видимые строки"></th>
+        <th></th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <details id="quickAddBox" style="margin-top:10px">
+    <summary>➕ Добавить свои глаголы в этот набор</summary>
+    <textarea id="quickAdd" style="margin-top:8px" placeholder="Одно слово в строке, формы через «|», транскрипции не обязательны:
+бежать | run | ran | run
+смотреть | see | saw | seen"></textarea>
+    <div class="row" style="margin-top:8px">
+      <button id="quickAddGo">Добавить в набор</button>
+      <span id="quickAddStatus" class="muted"></span>
+    </div>
+  </details>
+
+  <div class="hint">
+    Формы глагола пишутся через «|»: <b>V1 | V2 | V3</b>. Транскрипций столько же, сколько форм. Транскрипции можно не писать — игра их просто не покажет.
+    Поиск и сортировка меняют только показ таблицы: состав набора и порядок строк не меняются.
+  </div>
+</div>
+
+<div class="card" id="issueCard" style="display:none">
+  <b>Выдать ученику</b>
+  <div class="muted" style="margin-top:4px">
+    Ссылка удобнее: ученик её открывает и всё. Если набор большой, ссылка не помещается — пришлите код из поля ниже.
+    Ученик вставит его сам. Прогресс привязан к набору: если набор позже изменить, пришлите ссылку заново.
+  </div>
+
+  <label class="opt">Где лежит ученический файл</label>
+  <input type="text" id="baseUrl" placeholder="motya.html">
+  <div class="hint" id="baseHint"></div>
+
+  <label class="opt">Что выдавать</label>
+  <div class="row" style="margin-top:4px">
+    <label style="font-size:13px"><input type="radio" name="issueScope" value="all" checked> Весь набор</label>
+    <label style="font-size:13px"><input type="radio" name="issueScope" value="selected"> Только выбранные строки</label>
+    <label style="font-size:13px"><input type="radio" name="issueScope" value="unsent"> Только не отправленные</label>
+    <span id="issueScopeStat" class="muted"></span>
+  </div>
+
+  <label class="opt">Ссылка для ученика</label>
+  <textarea id="linkBox" readonly style="min-height:56px"></textarea>
+  <div class="row" style="margin-top:6px">
+    <button id="copyLink" class="small">Скопировать ссылку</button>
+    <a id="openLink" class="btn-file" target="_blank" rel="noopener" href="#">Открыть в ученическом файле ↗</a>
+    <span id="linkSize" class="muted"></span>
+  </div>
+
+  <label class="opt">Код набора (если ссылка не влезет)</label>
+  <textarea id="codeBox" readonly style="min-height:56px"></textarea>
+  <div class="row" style="margin-top:6px">
+    <button id="copyCode" class="small">Скопировать код</button>
+    <span id="codeSize" class="muted"></span>
+  </div>
+
+  <div id="issueWarn"></div>
+
+  <details>
+    <summary>Что увидит ученик</summary>
+    <div id="pupilPreview"></div>
+  </details>
+</div>
+
+<script>
+/* ===== CORE START ===== */
+const FMT = "1";
+const WARN_LEN = 4000;
+
+/* --- base64url поверх UTF-8 --- */
+function bytesToB64u(bytes){
+  let bin = "";
+  for(let i=0;i<bytes.length;i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function b64uToBytes(s){
+  s = String(s).replace(/-/g,"+").replace(/_/g,"/");
+  while(s.length % 4) s += "=";
+  const bin = atob(s);
+  const out = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+/* --- LZSS: флаг-байт, далее 8 элементов; 1 = литерал, 0 = совпадение (12 бит смещение + 4 бит длина) --- */
+const LZ_MIN = 3, LZ_MAX = 18, LZ_WINDOW = 4096, LZ_HASH = 1 << 15;
+
+function lzCompress(input){
+  const data = new TextEncoder().encode(input);
+  const n = data.length;
+  const out = [];
+  const head = new Int32Array(LZ_HASH).fill(-1);
+  const prev = new Int32Array(Math.max(1,n)).fill(-1);
+  let pos = 0;
+  while(pos < n){
+    const flagPos = out.length;
+    out.push(0);
+    let flag = 0;
+    for(let bit=0; bit<8 && pos < n; bit++){
+      let bestLen = 0, bestOff = 0;
+      if(pos + LZ_MIN <= n){
+        const h = ((data[pos]<<10) ^ (data[pos+1]<<5) ^ data[pos+2]) & (LZ_HASH-1);
+        const maxLen = Math.min(LZ_MAX, n - pos);
+        let cand = head[h], tries = 96;
+        while(cand >= 0 && tries-- > 0 && bestLen < maxLen){
+          if(pos - cand > LZ_WINDOW) break; // цепочка идёт по убыванию позиций: дальше только старше окна
+          let len = 0;
+          while(len < maxLen && data[cand+len] === data[pos+len]) len++;
+          if(len > bestLen){ bestLen = len; bestOff = pos - cand; }
+          cand = prev[cand];
+        }
+        prev[pos] = head[h];
+        head[h] = pos;
+      }
+      if(bestLen >= LZ_MIN){
+        const off = bestOff - 1;
+        out.push((off >> 4) & 0xFF, ((off & 0x0F) << 4) | (bestLen - LZ_MIN));
+        for(let k=1; k<bestLen; k++){ // пропущенные позиции тоже в цепочку — иначе теряем совпадения
+          const q = pos + k;
+          if(q + LZ_MIN <= n){
+            const hq = ((data[q]<<10) ^ (data[q+1]<<5) ^ data[q+2]) & (LZ_HASH-1);
+            prev[q] = head[hq]; head[hq] = q;
+          }
+        }
+        pos += bestLen;
+      } else {
+        flag |= 0x80 >> bit;
+        out.push(data[pos]);
+        pos++;
+      }
+    }
+    out[flagPos] = flag;
+  }
+  return out;
+}
+
+function lzDecompress(bytes){
+  const out = [];
+  let i = 0;
+  while(i < bytes.length){
+    const flag = bytes[i++];
+    for(let bit=0; bit<8; bit++){
+      if(i >= bytes.length) break;
+      if(flag & (0x80 >> bit)){
+        out.push(bytes[i++]);
+      } else {
+        if(i+1 >= bytes.length) throw new Error("обрыв потока");
+        const b0 = bytes[i++], b1 = bytes[i++];
+        const off = ((b0 << 4) | (b1 >> 4)) + 1;
+        const len = (b1 & 0x0F) + LZ_MIN;
+        const start = out.length - off;
+        if(start < 0) throw new Error("повреждённый поток");
+        for(let k=0; k<len; k++) out.push(out[start+k]);
+      }
+    }
+  }
+  return out;
+}
+
+/* --- набор: компактная упаковка --- */
+function setToRows(set){
+  return (set.w || []).map(r => Array.isArray(r) ? r.slice(0,4) : [r.ru, (r.en||[]).join("|"), (r.trans||[]).join("|"), r.note||""]);
+}
+function rowsToWords(rows){
+  return (rows||[]).map(r=>{
+    const en = String(r[1]||"").split("|").filter(Boolean);
+    let tr = String(r[2]||"").split("|");
+    if(tr.length !== en.length) tr = en.map((_,i)=> tr[i] || "");
+    return {ru: String(r[0]||""), en, trans: tr};
+  });
+}
+/* lean=true — id и name не дублируются в payload: для ссылки они и так лежат отдельными параметрами */
+function packSet(set, lean){
+  const rows = setToRows(set).map(r=>{
+    const o = r.slice(0,4);
+    while(o.length > 2 && !String(o[o.length-1] == null ? "" : o[o.length-1]).trim()) o.pop();
+    return o;
+  });
+  const compact = JSON.stringify({i: lean ? "" : (set.i||""), n: lean ? "" : (set.n||""), d: set.d||"", w: rows});
+  return FMT + "." + bytesToB64u(lzCompress(compact));
+}
+function unpackSet(payload){
+  payload = String(payload||"").replace(/\s+/g,"");
+  const dot = payload.indexOf(".");
+  if(dot < 0) throw new Error("не похоже на код набора");
+  const ver = payload.slice(0, dot);
+  if(ver !== FMT) throw new Error(ver > FMT ? "набор из более новой версии приложения" : "неизвестный формат кода");
+  const bytes = lzDecompress(b64uToBytes(payload.slice(dot+1)));
+  const obj = JSON.parse(new TextDecoder("utf-8").decode(Uint8Array.from(bytes)));
+  if(!obj || !Array.isArray(obj.w)) throw new Error("в коде нет слов");
+  return {i:obj.i||"", n:obj.n||"", d:obj.d||"", w:obj.w};
+}
+
+/* --- ссылка и код --- */
+function buildLink(baseUrl, set){
+  const p = new URLSearchParams();
+  p.set("v", FMT);
+  p.set("i", set.i || "");
+  p.set("n", set.n || "");
+  p.set("d", packSet(set, true));
+  return String(baseUrl||"motya.html").split("#")[0] + "#" + p.toString();
+}
+function readSetFromLocation(){
+  const h = (location.hash||"").replace(/^#+/,"");
+  if(!h) return null;
+  let p;
+  try{ p = new URLSearchParams(h); }catch(e){ return {error:"ссылка повреждена"}; }
+  if(!p.get("d")) return {error:"в ссылке нет набора — попросите преподавателя прислать код"};
+  if(p.get("v") && p.get("v") !== FMT) return {error:"набор из другой версии приложения — обновите файл"};
+  try{
+    const set = unpackSet(p.get("d"));
+    if(!set.i) set.i = p.get("i") || "";   // lean-ссылка: id и имя лежат отдельными параметрами
+    if(!set.n) set.n = p.get("n") || "";
+    set.viaLink = true;
+    return set;
+  }catch(e){
+    return {error: e.message || "код не читается"};
+  }
+}
+
+/* --- парсер слов --- */
+const HEADER_RE = /^\s*(?:№|русский|рус|слово|рус\.?|word|english|eng|v1|v2|v3|транскрипция|transcription|infinitive|past|номер|no|#)(?![\p{L}\p{N}])/iu;
+const IPA_RE = /[ˈˌŋːɪæʌəɜɒɔðθʃʒɡɹɑɔ]/;
+
+function isTranscription(s){
+  return /^[\[(/]/.test(s) || (IPA_RE.test(s) && !/[A-Za-z]/.test(s));
+}
+function pickSeparator(lines){
+  const tally = {";":0, "\t":0, ",":0};
+  for(const raw of lines){
+    const l = raw.trim();
+    if(!l) continue;
+    const c = {";":0, "\t":0, ",":0};
+    let depth = 0;
+    for(let i=0;i<l.length;i++){
+      const ch = l[i];
+      if(ch === '"'){ // пропускаем содержимое кавычек
+        i++;
+        while(i < l.length && l[i] !== '"') i++;
+        continue;
+      }
+      if(ch === "[" || ch === "(") depth++;
+      else if(ch === "]" || ch === ")"){ if(depth > 0) depth--; }
+      else if(depth === 0 && c[ch] !== undefined) c[ch]++;
+    }
+    let best = ";", bestN = 0;
+    for(const k of [";", "\t", ","]) if(c[k] > bestN){ bestN = c[k]; best = k; }
+    if(bestN > 0) tally[best]++;
+  }
+  let sep = ";", best = 0;
+  for(const k of [";", "\t", ","]) if(tally[k] > best){ best = tally[k]; sep = k; }
+  return sep;
+}
+function splitLine(line, sep){
+  const out = [];
+  let cur = "", i = 0, inQ = false, depth = 0;
+  while(i < line.length){
+    const c = line[i];
+    if(inQ){
+      if(c === '"'){
+        if(line[i+1] === '"'){ cur += '"'; i += 2; continue; }
+        inQ = false; i++; continue;
+      }
+      cur += c; i++; continue;
+    }
+    if(c === '"'){ inQ = true; i++; continue; }
+    if(c === "[" || c === "("){ depth++; cur += c; i++; continue; }
+    if(c === "]" || c === ")"){ if(depth > 0) depth--; cur += c; i++; continue; }
+    if(c === sep && depth === 0){ out.push(cur); cur = ""; i++; continue; }
+    cur += c; i++;
+  }
+  out.push(cur);
+  return out.map(s => s.trim());
+}
+function wordsFromObject(x){
+  const ru = String(x.ru ?? x.RU ?? x.word ?? x.title ?? "");
+  let en = x.en ?? x.EN ?? x.eng ?? [];
+  if(!Array.isArray(en)) en = (en === "" ? [] : String(en).split("|"));
+  en = en.map(s => String(s).trim()).filter(Boolean);
+  let tr = x.trans ?? x.tr ?? [];
+  if(!Array.isArray(tr)) tr = tr === "" ? [] : String(tr).split("|");
+  tr = tr.map(s => String(s).trim());
+  if(tr.length === 1 && tr[0] === "" && en.length > 1) tr = en.map(() => "");
+  if(tr.length !== en.length) tr = en.map((_,i) => tr[i] || "");
+  const note = String(x.note ?? x.комментарий ?? "");
+  return {ru, en, trans: tr, note};
+}
+function parseText(text){
+  const res = {ok:[], rejected:[]};
+  let t = String(text || "").replace(/^\uFEFF/, "").trim();
+  if(!t) return res;
+
+  if(t[0] === "[" || t[0] === "{"){
+    try{
+      const j = JSON.parse(t);
+      const arr = Array.isArray(j) ? j
+        : (Array.isArray(j.w) ? j.w.map(r => Array.isArray(r) ? {ru:r[0], en:r[1], trans:r[2], note:r[3]} : r) : [j]);
+      for(const x of arr){
+        const w = wordsFromObject(x);
+        if(w.ru && w.en.length) res.ok.push(w);
+        else res.rejected.push({raw: JSON.stringify(x).slice(0,60), reason: !w.ru ? "нет русского перевода" : "нет английской формы"});
+      }
+      return res;
+    }catch(e){ /* не JSON — разбираем как текст */ }
+  }
+
+  const rawLines = t.split(/\r?\n/);
+  const sep = pickSeparator(rawLines);
+  const lines = rawLines.map(l => l.replace(/^\uFEFF/, "")).filter(l => l.trim());
+
+  if(lines.length && HEADER_RE.test(lines[0]) && lines[0].includes(sep)) lines.shift();
+
+  for(const line of lines){
+    const parts = splitLine(line, sep).filter(Boolean);
+    if(!parts.length) continue;
+    let ru = "";
+    const en = [];
+    const trans = [];
+    let bad = "";
+    for(const p of parts){
+      if(isTranscription(p)){
+        if(en.length){
+          if(!trans[en.length-1]) trans[en.length-1] = p;
+        } else bad = bad || "транскрипция без английской формы";
+      } else if(/[а-яА-ЯёЁ]/.test(p) && !/[a-zA-Z]/.test(p)){
+        if(!ru) ru = p; else bad = bad || "второй русский фрагмент в строке";
+      } else {
+        en.push(p); trans.push("");
+      }
+    }
+    if(!ru) bad = bad || "нет русского перевода";
+    else if(!en.length) bad = bad || "нет английской формы";
+    if(bad) res.rejected.push({raw: line.trim().slice(0,70), reason: bad});
+    else res.ok.push({ru, en, trans});
+  }
+  return res;
+}
+
+/* --- прогресс ученика --- */
+const LS_PROGRESS = "motya_progress_v1";
+function loadAllProgress(){
+  try{ return JSON.parse(localStorage.getItem(LS_PROGRESS) || "{}") || {}; }
+  catch(e){ return {}; }
+}
+function setProgress(setId, pupil, data){
+  try{
+    const all = loadAllProgress();
+    all[setId] = all[setId] || {};
+    all[setId][pupil] = data;
+    localStorage.setItem(LS_PROGRESS, JSON.stringify(all));
+  }catch(e){ /* приватный режим — молча пропускаем */ }
+}
+function getProgress(setId, pupil){
+  const all = loadAllProgress();
+  return (all[setId] && all[setId][pupil]) || {w:{}, s:[], sd:{}};
+}
+function blankProgress(){ return {w:{}, s:[], sd:{}}; }
+function recordWord(setId, pupil, ru, en, ok){
+  const p = getProgress(setId, pupil);
+  const key = normalizeKey(ru);
+  const prev = p.w[key] || {a:0, ok:0, last:false, t:0};
+  p.w[key] = {ru, en, a: prev.a + 1, ok: prev.ok + (ok ? 1 : 0), last: !!ok, t: Date.now(), lvl: ok ? Math.min(4, (prev.lvl||0) + 1) : 0};
+  setProgress(setId, pupil, p);
+  return p;
+}
+function recordSession(setId, pupil, session){
+  const p = getProgress(setId, pupil);
+  p.s = (p.s || []).concat([session]).slice(-50);
+  setProgress(setId, pupil, p);
+}
+function progressSummary(setId, pupil, rows){
+  const p = getProgress(setId, pupil);
+  let learned = 0, touched = 0;
+  for(const r of rows){
+    const e = p.w[normalizeKey(r[0])];
+    if(e){ touched++; if(e.last) learned++; }
+  }
+  return {learned, touched, total: rows.length, sessions: (p.s||[]).length};
+}
+function normalizeKey(s){ return String(s||"").toLowerCase().replace(/\s+/g," ").trim(); }
+function diffSets(oldSet, newSet){
+  const oldMap = new Map();
+  for(const r of (oldSet.w||[])) oldMap.set(normalizeKey(r[0]), r[1]);
+  let added = 0, changed = 0;
+  for(const r of (newSet.w||[])){
+    const k = normalizeKey(r[0]);
+    if(!oldMap.has(k)) added++;
+    else if(oldMap.get(k) !== r[1]) changed++;
+  }
+  return {added, changed, total: (newSet.w||[]).length};
+}
+/* ===== CORE END ===== */
+
+/* ===== БАЗА: 99 НЕПРАВИЛЬНЫХ ГЛАГОЛОВ ===== */
+const VERB_BASE = "будить|wake|woke|woken\nбыть|be|was/were|been\nродиться|be born|was born|been born\nбить|beat|beat|beaten/beat\nстановиться|become|became|become\nначинать|begin|began|begun\nгнуть|bend|bent|bent\nидти|go|went|gone\nвидеть|see|saw|seen\nписать|write|wrote|written\nнести, переносить|bear|bore|borne\nнести|bear|bore|borne\nпереносить|bear|bore|borne\nсвязывать|bind|bound|bound\nкусаться|bite|bit|bitten\nкусать|bite|bit|bitten\nкровоточить|bleed|bled|bled\nдуть|blow|blew|blown\nломать|break|broke|broken\nразбивать|break|broke|broken\nсломать|break|broke|broken\nприносить|bring|brought|brought\nстроить|build|built|built\nпокупать|buy|bought|bought\nловить|catch|caught|caught\nвыбирать|choose|chose|chosen\nприходить|come|came|come\nрезать|cut|cut|cut\nделать|do|did|done\nрисовать|draw|drew|drawn\nпить|drink|drank|drunk\nводить|drive|drove|driven\nесть, кушать|eat|ate|eaten\nесть|eat|ate|eaten\nпадать|fall|fell|fallen\nкормить|feed|fed|fed\nчувствовать|feel|felt|felt\nсражаться|fight|fought|fought\nнаходить|find|found|found\nлетать|fly|flew|flown\nзабывать|forget|forgot|forgotten\nпрощать|forgive|forgave|forgiven\nзамерзать|freeze|froze|frozen\nполучать|get|got|got\nдавать|give|gave|given\nмолоть|grind|ground|ground\nиметь|have|had|had\nслышать|hear|heard|heard\nпрятать|hide|hid|hidden\nдержать|hold|held|held\nранить|hurt|hurt|hurt\nоставлять|leave|left|left\nодалживать|lend|lent|lent\nпозволять|let|let|let\nлежать|lie|lay|lain\nтерять|lose|lost|lost\nделать (создавать)|make|made|made\nзначить|mean|meant|meant\nвстречать|meet|met|met\nплатить|pay|paid|paid\nкласть|put|put|put\nчитать|read|read|read\nездить верхом|ride|rode|ridden\nзвонить|ring|rang|rung\nбежать|run|ran|run\nговорить|say|said|said\nпродавать|sell|sold|sold\nпосылать|send|sent|sent\nпоказывать|show|showed|shown\nзакрывать|shut|shut|shut\nпеть|sing|sang|sung\nсидеть|sit|sat|sat\nспать|sleep|slept|slept\nговорить (разговаривать)|speak|spoke|spoken\nтратить|spend|spent|spent\nстоять|stand|stood|stood\nкрасть|steal|stole|stolen\nплавать|swim|swam|swum\nбрать|take|took|taken\nучить, преподавать|teach|taught|taught\nучить|teach|taught|taught\nрвать|tear|tore|torn\nрассказывать|tell|told|told\nдумать|think|thought|thought\nбросать|throw|threw|thrown\nпонимать|understand|understood|understood\nпросыпаться|wake|woke|woken\nносить (одежду)|wear|wore|worn\nкопать|dig|dug|dug\nсветить|shine|shone|shone\nгнуться|bend|bent|bent\nставить|set|set|set\nтрясти|shake|shook|shaken\nукусить|bite|bit|bitten\nвисеть|hang|hung|hung\nударять|hit|hit|hit\nдержать (владеть)|keep|kept|kept\nвести (за собой)|lead|led|led\nсветить (огонь)|light|lit|lit";
+/* ===== БАЗА: ТРАНСКРИПЦИИ (210) ===== */
+const TRANS_BASE = "wake|[weɪk]\nwoke|[wəʊk]\nwoken|[ˈwəʊkən]\nbe|[biː]\nwas|[wɒz]\nwere|[weə]\nwas/were|[wɒz]/[weə]\nbeen|[biːn]\nbe born|[biː bɔːn]\nwas born|[wɒz bɔːn]\nbeen born|[biːn bɔːn]\nbeat|[biːt]\nbeaten|[ˈbiːtn]\nbeaten/beat|[ˈbiːtn]/[biːt]\nbecome|[bɪˈkʌm]\nbecame|[bɪˈkeɪm]\nbegin|[bɪˈɡɪn]\nbegan|[bɪˈɡæn]\nbegun|[bɪˈɡʌn]\nbend|[bend]\nbent|[bent]\ngo|[ɡəʊ]\nwent|[went]\ngone|[ɡɒn]\nsee|[siː]\nsaw|[sɔː]\nseen|[siːn]\nwrite|[raɪt]\nwrote|[rəʊt]\nwritten|[ˈrɪtn]\nbear|[bɛə]\nbore|[bɔː]\nborne|[bɔːn]\nbind|[baɪnd]\nbound|[baʊnd]\nbite|[baɪt]\nbit|[bɪt]\nbitten|[ˈbɪtn]\nbleed|[bliːd]\nbled|[bled]\nblow|[bləʊ]\nblew|[bluː]\nblown|[bləʊn]\nbreak|[breɪk]\nbroke|[brəʊk]\nbroken|[ˈbrəʊkən]\nbring|[brɪŋ]\nbrought|[brɔːt]\nbuild|[bɪld]\nbuilt|[bɪlt]\nbuy|[baɪ]\nbought|[bɔːt]\ncatch|[kætʃ]\ncaught|[kɔːt]\nchoose|[tʃuːz]\nchose|[tʃəʊz]\nchosen|[ˈtʃəʊzn]\ncome|[kʌm]\ncame|[keɪm]\ncut|[kʌt]\ndo|[duː]\ndid|[dɪd]\ndone|[dʌn]\ndraw|[drɔː]\ndrew|[druː]\ndrawn|[drɔːn]\ndrink|[drɪŋk]\ndrank|[dræŋk]\ndrunk|[drʌŋk]\ndrive|[draɪv]\ndrove|[drəʊv]\ndriven|[ˈdrɪvn]\neat|[iːt]\nate|[eɪt]\neaten|[ˈiːtn]\nfall|[fɔːl]\nfell|[fel]\nfallen|[ˈfɔːlən]\nfeed|[fiːd]\nfed|[fed]\nfeel|[fiːl]\nfelt|[felt]\nfight|[faɪt]\nfought|[fɔːt]\nfind|[faɪnd]\nfound|[faʊnd]\nfly|[flaɪ]\nflew|[fluː]\nflown|[fləʊn]\nforget|[fəˈɡet]\nforgot|[fəˈɡɒt]\nforgotten|[fəˈɡɒtn]\nforgive|[fəˈɡɪv]\nforgave|[fəˈɡeɪv]\nforgiven|[fəˈɡɪvn]\nfreeze|[friːz]\nfroze|[frəʊz]\nfrozen|[ˈfrəʊzn]\nget|[ɡet]\ngot|[ɡɒt]\ngive|[ɡɪv]\ngave|[ɡeɪv]\ngiven|[ˈɡɪvn]\nhave|[hæv]\nhad|[hæd]\nhear|[hɪə]\nheard|[hɜːd]\nhide|[haɪd]\nhid|[hɪd]\nhidden|[ˈhɪdn]\nhold|[həʊld]\nheld|[held]\nhurt|[hɜːt]\nleave|[liːv]\nleft|[left]\nlend|[lend]\nlent|[lent]\nlet|[let]\nlie|[laɪ]\nlay|[leɪ]\nlain|[leɪn]\nlose|[luːz]\nlost|[lɒst]\nmake|[meɪk]\nmade|[meɪd]\nmean|[miːn]\nmeant|[ment]\nmeet|[miːt]\nmet|[met]\npay|[peɪ]\npaid|[peɪd]\nput|[pʊt]\nread|[riːd]\nride|[raɪd]\nrode|[rəʊd]\nridden|[ˈrɪdn]\nring|[rɪŋ]\nrang|[ræŋ]\nrung|[rʌŋ]\nrun|[rʌn]\nran|[ræn]\nsay|[seɪ]\nsaid|[sed]\nsell|[sel]\nsold|[səʊld]\nsend|[send]\nsent|[sent]\nshow|[ʃəʊ]\nshowed|[ʃəʊd]\nshown|[ʃəʊn]\nshut|[ʃʌt]\nsing|[sɪŋ]\nsang|[sæŋ]\nsung|[sʌŋ]\nsit|[sɪt]\nsat|[sæt]\nsleep|[sliːp]\nslept|[slept]\nspeak|[spiːk]\nspoke|[spəʊk]\nspoken|[ˈspəʊkən]\nspend|[spend]\nspent|[spent]\nstand|[stænd]\nstood|[stʊd]\nsteal|[stiːl]\nstole|[stəʊl]\nstolen|[ˈstəʊlən]\nswim|[swɪm]\nswam|[swæm]\nswum|[swʌm]\ntake|[teɪk]\ntook|[tʊk]\ntaken|[ˈteɪkən]\nteach|[tiːtʃ]\ntaught|[tɔːt]\ntear|[teə]\ntore|[tɔː]\ntorn|[tɔːn]\ntell|[tel]\ntold|[təʊld]\nthink|[θɪŋk]\nthought|[θɔːt]\nthrow|[θrəʊ]\nthrew|[θruː]\nthrown|[θrəʊn]\nunderstand|[ˌʌndəˈstænd]\nunderstood|[ˌʌndəˈstʊd]\nwear|[weə]\nwore|[wɔː]\nworn|[wɔːn]\ndig|[dɪɡ]\ndug|[dʌɡ]\nshine|[ʃaɪn]\nshone|[ʃɒn]\nset|[set]\nshake|[ʃeɪk]\nshook|[ʃʊk]\nshaken|[ˈʃeɪkən]\nhang|[hæŋ]\nhung|[hʌŋ]\nhit|[hɪt]\nkeep|[kiːp]\nkept|[kept]\nlead|[liːd]\nled|[led]\nlight|[laɪt]\nlit|[lɪt]\ngrind|[ɡraɪnd]\nground|[ɡraʊnd]";
+
+/* ===== УТИЛИТЫ И СОСТОЯНИЕ ===== */
+const LS_SETS = "motya_sets_v1", LS_ACTIVE = "motya_active_v1";
+const LS_BASE_URL = "motya_base_url_v1", LS_LEGACY = "motya_last_dict_v1";
+
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function today(){ const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
+function plural(n, one, few, many){ const a = Math.abs(n) % 100, b = a % 10; if(a > 10 && a < 20) return many; if(b > 1 && b < 5) return few; if(b === 1) return one; return many; }
+function wordsCount(n){ return n + " " + plural(n, "слово", "слова", "слов"); }
+
+let onlyGood = false;
+let saveTimer = null;
+
+function loadSets(){
+  try{ const s = JSON.parse(lsGet(LS_SETS) || "[]"); return Array.isArray(s) ? s.filter(x => x && Array.isArray(x.w)) : []; }
+  catch(e){ return []; }
+}
+function saveSets(list){ lsSet(LS_SETS, JSON.stringify(list)); }
+function newId(){ return "s" + Date.now().toString(36) + Math.floor(Math.random() * 1679616).toString(36); }
+function activeSet(){ const id = lsGet(LS_ACTIVE); return loadSets().find(s => s.i === id) || null; }
+function activeId(){ return lsGet(LS_ACTIVE); }
+function setActive(id){ lsSet(LS_ACTIVE, id); onlyGood = false; selectedRows = new Set(); }
+function currentSets(){ return loadSets(); }
+function updateSet(id, mutate){
+  const list = loadSets();
+  const i = list.findIndex(s => s.i === id);
+  if(i < 0) return false;
+  mutate(list[i]);
+  saveSets(list);
+  return true;
+}
+
+function flashSaved(){
+  const b = $("saveBadge"); if(!b) return;
+  b.classList.add("show");
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=> b.classList.remove("show"), 900);
+}
+
+function mkInput(value, onchange, cls){
+  const el = document.createElement("input");
+  el.type = "text"; el.value = value == null ? "" : String(value);
+  if(cls) el.className = cls;
+  el.addEventListener("change", ()=> onchange(el.value));
+  el.addEventListener("blur", ()=> onchange(el.value));
+  return el;
+}
+
+/* ===== ПРОВЕРКА НАБОРА ===== */
+function rowProblem(r){
+  const ru = String((r && r[0]) || "").trim();
+  const en = String((r && r[1]) || "").split("|").map(s=>s.trim()).filter(Boolean);
+  const tr = String((r && r[2]) || "").split("|").map(s=>s.trim()).filter(Boolean);
+  if(!ru) return "нет русского слова";
+  if(!en.length) return "нет английской формы";
+  if(tr.length > en.length) return "транскрипций больше, чем форм";
+  return null;
+}
+function badRows(set){
+  const out = [];
+  (set.w || []).forEach((r, i)=>{ const p = rowProblem(r); if(p) out.push({n: i+1, ru: String((r && r[0]) || "").trim(), p: p}); });
+  return out;
+}
+function cleanSet(set){
+  return {i: set.i, n: set.n, d: set.d, w: (set.w || []).filter(r => !rowProblem(r))};
+}
+
+/* ===== СПИСОК НАБОРОВ ===== */
+function renderList(){
+  const list = currentSets();
+  const box = $("setList");
+  $("setsCount").textContent = list.length ? "(" + list.length + ")" : "";
+  box.innerHTML = "";
+  if(!list.length){
+    box.innerHTML = '<div class="muted" style="margin-top:8px">Наборов пока нет. Создайте пустой, возьмите базу глаголов или загрузите файл.</div>';
+    return;
+  }
+  const act = lsGet(LS_ACTIVE);
+  list.forEach(s=>{
+    const div = document.createElement("div");
+    div.className = "set-item" + (s.i === act ? " sel" : "");
+    const bad = badRows(s).length;
+    div.innerHTML = '<div class="t"><b>' + esc(s.n) + '</b>'
+      + '<span class="muted">' + wordsCount((s.w||[]).length) + ' · ' + esc(s.d || "") + ' · id ' + esc(s.i)
+      + (bad ? ' · <span style="color:#a33">' + bad + ' строк не готово</span>' : '') + '</span></div>';
+    const bOpen = document.createElement("button");
+    bOpen.className = "small"; bOpen.textContent = "Открыть";
+    bOpen.onclick = ()=>{ setActive(s.i); renderAll(); };
+    const bDup = document.createElement("button");
+    bDup.className = "ghost small"; bDup.textContent = "⧉";
+    bDup.title = "Дублировать набор";
+    bDup.onclick = ()=> duplicateSet(s.i);
+    const bDel = document.createElement("button");
+    bDel.className = "ghost small"; bDel.textContent = "✕";
+    bDel.onclick = ()=>{
+      if(!confirm("Удалить набор «" + s.n + "»? У учеников он останется, но новый уже не выдать.")) return;
+      const l = loadSets().filter(x => x.i !== s.i);
+      saveSets(l);
+      if(lsGet(LS_ACTIVE) === s.i) lsSet(LS_ACTIVE, (l[0] || {}).i || "");
+      renderAll();
+    };
+    div.appendChild(bOpen); div.appendChild(bDup); div.appendChild(bDel);
+    box.appendChild(div);
+  });
+}
+
+/* ===== РЕДАКТОР НАБОРА ===== */
+let rowFilter = "";
+let rowSort = "";
+let noteFilter = "";
+let issueScope = "all";
+let selectedRows = new Set();
+
+function rowSent(r){
+  return /✓/.test(String((r && r[3]) || ""));
+}
+function stampToday(){
+  const d = new Date();
+  const p = n => (n < 10 ? "0" : "") + n;
+  return "✓ " + p(d.getDate()) + "." + p(d.getMonth() + 1) + "." + d.getFullYear();
+}
+function markNote(note, on){
+  let t = String(note || "");
+  t = t.replace(/✓\s*\d{1,2}\.\d{1,2}(\.\d{2,4})?/g, "").replace(/\s{2,}/g, " ").trim();
+  if(on) t = (t ? t + " " : "") + stampToday();
+  return t;
+}
+function rowVisible(r, i){
+  const note = String((r && r[3]) || "").trim();
+  if(noteFilter === "sent" && !rowSent(r)) return false;
+  if(noteFilter === "unsent" && rowSent(r)) return false;
+  if(noteFilter === "with" && !note) return false;
+  if(noteFilter === "without" && note) return false;
+  if(!rowFilter) return true;
+  const q = rowFilter.toLowerCase();
+  return [r[0], r[1], r[2], r[3]].some(v => String(v == null ? "" : v).toLowerCase().indexOf(q) >= 0);
+}
+function renderEditor(){
+  const s = activeSet();
+  $("editorCard").style.display = s ? "" : "none";
+  $("issueCard").style.display = s ? "" : "none";
+  if(!s){ $("rows").innerHTML = ""; return; }
+  $("setName").value = s.n || "";
+  $("setDate").value = s.d || "";
+  renderRows();
+  renderMeta();
+}
+function sortIndices(idx, rows){
+  if(!rowSort) return idx;
+  const p = rowSort.split("-");
+  const FIELD = { ru: 0, en: 1, note: 3 };
+  const field = FIELD[p[0]] == null ? 0 : FIELD[p[0]];
+  const dir = p[1] === "desc" ? -1 : 1;
+  const locale = field === 1 ? "en" : "ru";
+  return idx.slice().sort((a, b)=>{
+    const va = String(rows[a][field] == null ? "" : rows[a][field]);
+    const vb = String(rows[b][field] == null ? "" : rows[b][field]);
+    const c = va.localeCompare(vb, locale, {sensitivity: "base"});
+    return c !== 0 ? c * dir : a - b;
+  });
+}
+function renderRows(){
+  const s = activeSet();
+  const tb = $("rows");
+  tb.innerHTML = "";
+  if(!s) return;
+  const rows = s.w || [];
+  const shown = [];
+  rows.forEach((r, i)=>{ if(rowVisible(r, i)) shown.push(i); });
+  const order = sortIndices(shown, rows);
+  order.forEach(i => tb.appendChild(rowNode(rows[i], i)));
+  const NOTE_LABEL = { sent: " · только отправленные", unsent: " · только неотправленные", with: " · со заметкой", without: " · без заметки" };
+  $("filterCount").textContent = (rowFilter || rowSort || noteFilter)
+    ? order.length + " из " + rows.length
+      + (rowSort ? " · порядок изменён" : "")
+      + (noteFilter ? NOTE_LABEL[noteFilter] : "")
+    : "";
+  const sent = rows.filter(rowSent).length;
+  $("markStat").textContent = rows.length ? "отмечено: " + sent + " из " + rows.length : "";
+  updateSelUI();
+}
+function updateSelUI(){
+  const boxes = Array.prototype.slice.call($("rows").querySelectorAll("input.rowsel"));
+  const n = selectedRows.size;
+  $("selCount").textContent = n ? "выбрано: " + n : "";
+  $("delSelected").disabled = !n;
+  $("markSent").disabled = !n;
+  $("unmarkSent").disabled = !n;
+  $("dupSelected").disabled = !n;
+  const all = boxes.length > 0 && boxes.every(b => b.checked);
+  $("selAll").checked = all;
+  $("selAll").indeterminate = !all && n > 0;
+  renderIssue();
+}
+function rowNode(r, i){
+  const tr = document.createElement("tr");
+  tr.dataset.i = i;
+  const fields = [
+    v => updateSet(activeId(), s => { s.w[i][0] = v; }),
+    v => updateSet(activeId(), s => { s.w[i][1] = v; }),
+    v => updateSet(activeId(), s => { s.w[i][2] = v; }),
+    v => updateSet(activeId(), s => { s.w[i][3] = v; })
+  ];
+  for(let f = 0; f < 4; f++) tr.appendChild(td()).appendChild(mkInput(r[f], v=>{ fields[f](v); afterEdit(i); }));
+  const cb = document.createElement("input");
+  cb.type = "checkbox"; cb.className = "rowsel"; cb.checked = selectedRows.has(i);
+  cb.title = "Выбрать строку для удаления";
+  cb.addEventListener("change", ()=>{
+    if(cb.checked) selectedRows.add(i); else selectedRows.delete(i);
+    tr.classList.toggle("selected", cb.checked);
+    updateSelUI();
+  });
+  const selTd = td(); selTd.className = "sel"; selTd.appendChild(cb); tr.appendChild(selTd);
+  if(selectedRows.has(i)) tr.classList.add("selected");
+  const del = document.createElement("button");
+  del.className = "ghost small"; del.textContent = "✕"; del.title = "Удалить строку";
+  del.onclick = ()=>{ updateSet(activeId(), s => { s.w.splice(i, 1); }); selectedRows.clear(); renderAll(); };
+  td().appendChild(del);
+  if(rowProblem(r)) tr.classList.add("bad");
+  return tr;
+}
+function td(){ const d = document.createElement("td"); return d; }
+function afterEdit(i){
+  onlyGood = false;
+  flashSaved();
+  const tr = $("rows").querySelector('tr[data-i="' + i + '"]');
+  const set = activeSet();
+  if(tr && set && set.w[i]) tr.classList.toggle("bad", !!rowProblem(set.w[i]));
+  renderMeta(); renderList(); renderIssue();
+}
+function renderMeta(){
+  const s = activeSet();
+  if(!s) return;
+  const bad = badRows(s);
+  const words = (s.w || []).length;
+  $("setMeta").innerHTML = wordsCount(words) + " · готово к выдаче: <b>" + (words - bad.length) + "</b>"
+    + (bad.length ? ' · <span style="color:#a33">не готово: ' + bad.length + "</span>" : "");
+}
+function addRow(){
+  let newIdx = -1;
+  updateSet(activeId(), s => { s.w.push(["", "", "", ""]); newIdx = s.w.length - 1; });
+  renderAll();
+  const tr = $("rows").querySelector('tr[data-i="' + newIdx + '"]') || $("rows").lastElementChild;
+  if(tr) tr.querySelector("input").focus();
+}
+$("addRow").addEventListener("click", addRow);
+$("rowFilter").addEventListener("input", e => { rowFilter = e.target.value.trim(); renderRows(); });
+$("rowSort").addEventListener("change", e => { rowSort = e.target.value; renderRows(); });
+$("noteFilter").addEventListener("change", e => { noteFilter = e.target.value; renderRows(); });
+Array.prototype.forEach.call(document.querySelectorAll('input[name="issueScope"]'), el => {
+  el.addEventListener("change", e => { if(e.target.checked){ issueScope = e.target.value; renderIssue(); } });
+});
+$("selAll").addEventListener("change", e => {
+  const on = e.target.checked;
+  Array.prototype.forEach.call($("rows").querySelectorAll("tr"), tr => {
+    const i = +tr.dataset.i;
+    const cb = tr.querySelector("input.rowsel");
+    if(!cb) return;
+    cb.checked = on;
+    tr.classList.toggle("selected", on);
+    if(on) selectedRows.add(i); else selectedRows.delete(i);
+  });
+  updateSelUI();
+});
+$("delSelected").addEventListener("click", ()=>{
+  const s = activeSet();
+  const n = selectedRows.size;
+  if(!s || !n) return;
+  if(!confirm("Удалить выбранные строки (" + n + ")?")) return;
+  updateSet(activeId(), st => { st.w = (st.w || []).filter((r, idx)=> !selectedRows.has(idx)); });
+  selectedRows = new Set();
+  renderAll();
+});
+function applyMark(on){
+  const s = activeSet();
+  const n = selectedRows.size;
+  if(!s || !n) return;
+  if(on && !confirm("Отметить " + n + " " + plural(n, "строку", "строки", "строк") + " как отправленные? В заметку допишется отметка «" + stampToday() + "».")) return;
+  updateSet(activeId(), st => {
+    selectedRows.forEach(i => { if(st.w[i]) st.w[i][3] = markNote(st.w[i][3], on); });
+  });
+  selectedRows.clear();
+  flashSaved();
+  renderAll();
+}
+function duplicateSelected(){
+  const s = activeSet();
+  if(!s || !selectedRows.size) return;
+  const rows = (s.w || []).filter((r, i) => selectedRows.has(i)).map(r => r.slice());
+  if(!rows.length) return;
+  const copy = { i: newId(), n: (s.n || "Набор") + " (пачка)", d: today(), w: rows };
+  const list = loadSets();
+  list.unshift(copy);
+  saveSets(list);
+  selectedRows.clear();
+  setActive(copy.i);
+  renderAll();
+}
+$("markSent").addEventListener("click", ()=> applyMark(true));
+$("unmarkSent").addEventListener("click", ()=> applyMark(false));
+$("dupSelected").addEventListener("click", duplicateSelected);
+$("setName").addEventListener("input", e => {
+  updateSet(activeId(), s => { s.n = e.target.value; }); flashSaved(); renderList(); renderIssue(); renderMeta();
+});
+$("setDate").addEventListener("input", e => {
+  updateSet(activeId(), s => { s.d = e.target.value; }); flashSaved(); renderList(); renderIssue();
+});
+$("dupSet").addEventListener("click", ()=> duplicateSet(lsGet(LS_ACTIVE)));
+$("delSet").addEventListener("click", ()=>{
+  const id = lsGet(LS_ACTIVE);
+  const s = activeSet();
+  if(!s) return;
+  if(!confirm("Удалить набор «" + s.n + "»?")) return;
+  const l = loadSets().filter(x => x.i !== id);
+  saveSets(l);
+  lsSet(LS_ACTIVE, (l[0] || {}).i || "");
+  renderAll();
+});
+
+function duplicateSet(id){
+  const s = loadSets().find(x => x.i === id);
+  if(!s) return;
+  const copy = {i: newId(), n: s.n + " (копия)", d: today(), w: (s.w || []).map(r => r.slice())};
+  const list = loadSets();
+  list.unshift(copy);
+  saveSets(list);
+  setActive(copy.i);
+  renderAll();
+}
+
+/* ===== СОЗДАНИЕ И ИМПОРТ ===== */
+function addSet(name, rows, keepId, date){
+  const set = {i: keepId || newId(), n: name || ("Набор " + new Date().toLocaleDateString("ru-RU")), d: date || today(), w: rows || []};
+  const list = loadSets();
+  const i = list.findIndex(x => x.i === set.i);
+  if(i >= 0) list[i] = set; else list.unshift(set);
+  saveSets(list);
+  setActive(set.i);
+  renderAll();
+  return set;
+}
+$("newEmpty").addEventListener("click", ()=> addSet("Новый набор", [["", "", "", ""]]));
+
+function baseRows(){
+  const T = {};
+  TRANS_BASE.split("\n").forEach(l=>{ const i = l.indexOf("|"); if(i > 0) T[l.slice(0, i)] = l.slice(i+1); });
+  return VERB_BASE.split("\n").map(l=>{
+    const p = l.split("|");
+    const ru = p[0], forms = p.slice(1).filter(Boolean);
+    return [ru, forms.join("|"), forms.map(f => T[f] || "").join("|"), ""];
+  });
+}
+$("newFromBase").addEventListener("click", ()=>{
+  addSet("Неправильные глаголы (" + VERB_BASE.split("\n").length + ")", baseRows());
+});
+
+/* --- вставка текстом --- */
+function normalizePipe(text){
+  const lines = String(text || "").split(/\r?\n/).filter(l => l.trim());
+  let pipes = 0, semis = 0;
+  for(const l of lines){
+    let depth = 0;
+    for(const ch of l){
+      if(ch === "[" || ch === "(") depth++;
+      else if(ch === "]" || ch === ")"){ if(depth > 0) depth--; }
+      else if(depth === 0){ if(ch === "|") pipes++; else if(ch === ";") semis++; }
+    }
+  }
+  if(pipes <= semis) return text;
+  return lines.map(l => {
+    let depth = 0, out = "";
+    for(const ch of l){
+      if(ch === "[" || ch === "(") depth++;
+      else if(ch === "]" || ch === ")"){ if(depth > 0) depth--; }
+      if(ch === "|" && depth === 0) out += ";"; else out += ch;
+    }
+    return out;
+  }).join("\n");
+}
+function rowsFromParse(res){
+  return res.ok.map(w => [w.ru, w.en.join("|"), w.trans.join("|"), w.note || ""]);
+}
+function showParseResult(name, res, allowAdd){
+  const box = $("pastePreview");
+  const okRows = res.ok.map(w => "<tr><td>" + esc(w.ru) + '</td><td>' + esc(w.en.join(" / ")) + '</td><td class="trans">' + esc(w.trans.filter(Boolean).join("  ")) + "</td></tr>").join("");
+  const badRows = res.rejected.map(x => '<div><b>⚠ ' + esc(x.reason) + '</b> — ' + esc(x.raw) + "</div>").join("");
+  let html = '<div class="muted" style="margin-top:8px">Распознано слов: <b class="count-ok">' + res.ok.length + "</b>"
+    + (res.rejected.length ? ' · не распознано: <b style="color:#a33">' + res.rejected.length + "</b>" : "") + "</div>";
+  if(res.ok.length) html += '<div style="max-height:40vh;overflow:auto"><table class="prev-tbl"><tr><th>Русский</th><th>English</th><th>Транскрипция</th></tr>' + okRows + "</table></div>";
+  if(badRows) html += '<div class="muted" style="margin-top:8px">Не распознано:</div><div class="err-list">' + badRows + "</div>";
+  if(allowAdd && res.ok.length) html += '<div class="row" style="margin-top:10px"><button id="pasteAdd">Создать набор из этих слов</button><button class="ghost small" id="pasteAppend">Дописать в текущий набор</button></div>';
+  box.innerHTML = html;
+  if(!res.ok.length && !res.rejected.length) box.innerHTML = '<div class="muted" style="margin-top:8px">Текст пустой.</div>';
+  const bAdd = $("pasteAdd");
+  if(bAdd) bAdd.onclick = ()=>{
+    const nm = prompt("Как назвать набор?", name || "Набор");
+    if(nm === null) return;
+    addSet(nm.trim() || name || "Набор", rowsFromParse(res));
+    $("pasteBox").value = "";
+    $("pasteStatus").textContent = "Набор создан.";
+  };
+  const bApp = $("pasteAppend");
+  if(bApp) bApp.onclick = ()=>{
+    if(!activeSet()){ alert("Сначала откройте набор."); return; }
+    updateSet(activeId(), s => { s.w = (s.w || []).concat(rowsFromParse(res)); });
+    $("pasteBox").value = "";
+    $("pasteStatus").textContent = "Слова добавлены в текущий набор.";
+    renderAll();
+  };
+}
+$("pasteGo").addEventListener("click", ()=>{
+  const t = $("pasteBox").value;
+  if(!t.trim()){ $("pasteStatus").textContent = "Вставьте текст."; return; }
+  const res = parseText(normalizePipe(t));
+  $("pasteStatus").textContent = res.ok.length ? "Готово: " + wordsCount(res.ok.length) : "Ничего не распознано — проверьте разделитель.";
+  showParseResult("Набор", res, true);
+});
+$("pasteClear").addEventListener("click", ()=>{
+  $("pasteBox").value = ""; $("pastePreview").innerHTML = ""; $("pasteStatus").textContent = "";
+});
+$("pasteInto").addEventListener("click", ()=>{
+  const t = $("pasteBox").value;
+  if(!t.trim() || !activeSet()){ alert("Вставьте текст и откройте набор."); return; }
+  const res = parseText(normalizePipe(t));
+  if(!res.ok.length){ alert("Ничего не распознано."); return; }
+  updateSet(activeId(), s => { s.w = (s.w || []).concat(rowsFromParse(res)); });
+  $("pasteBox").value = "";
+  $("pasteStatus").textContent = "Добавлено слов: " + res.ok.length + (res.rejected.length ? ", не распознано: " + res.rejected.length : "");
+  renderAll();
+});
+
+/* --- быстрое добавление своих слов в открытый набор --- */
+$("quickAddGo").addEventListener("click", ()=>{
+  const t = $("quickAdd").value;
+  if(!activeSet()){ alert("Сначала откройте набор."); return; }
+  if(!t.trim()){ $("quickAddStatus").textContent = "Вставьте слова."; return; }
+  const res = parseText(normalizePipe(t));
+  if(!res.ok.length){
+    $("quickAddStatus").textContent = "Ничего не распознано — проверьте разделитель «|».";
+    return;
+  }
+  updateSet(activeId(), s => { s.w = (s.w || []).concat(rowsFromParse(res)); });
+  $("quickAdd").value = "";
+  $("quickAddStatus").textContent = "Добавлено: " + wordsCount(res.ok.length)
+    + (res.rejected.length ? ", отброшено: " + res.rejected.length : "");
+  renderAll();
+});
+
+/* --- файл набора --- */
+$("loadFile").addEventListener("change", e => {
+  const f = e.target.files[0];
+  e.target.value = "";
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=>{
+    const text = String(r.result || "");
+    const t = text.trim();
+    if(t[0] === "{"){
+      try{
+        const j = JSON.parse(t.replace(/^\uFEFF/, ""));
+        if(j && Array.isArray(j.w)){
+          const rows = (j.w||[]).map(x => Array.isArray(x) ? x.slice(0,4) : [x.ru, (x.en||[]).join("|"), (x.trans||[]).join("|"), x.note || ""]);
+          addSet(j.n || f.name.replace(/\.[^.]+$/, ""), rows, j.i, j.d);
+          $("pasteStatus").textContent = "Загружен набор из файла: " + rows.length + " строк.";
+          return;
+        }
+      }catch(e){ /* не наш JSON — разбираем как текст */ }
+    }
+    const res = parseText(normalizePipe(text));
+    if(!res.ok.length){ $("pasteStatus").textContent = "⚠️ В файле не нашлось слов."; }
+    showParseResult(f.name.replace(/\.[^.]+$/, ""), res, true);
+    $("pasteStatus").textContent = "Файл прочитан: " + wordsCount(res.ok.length);
+  };
+  r.readAsText(f, "utf-8");
+});
+
+/* --- файлы пробной версии --- */
+function checkLegacy(){
+  const raw = lsGet(LS_LEGACY);
+  if(!raw) return;
+  const res = parseText(raw);
+  if(!res.ok.length) return;
+  $("bannerText").textContent = "Найден сохранённый словарь из пробной версии: " + wordsCount(res.ok.length)
+    + (res.rejected.length ? ", не распознано строк: " + res.rejected.length : "") + ".";
+  $("banner").style.display = "";
+}
+$("importLegacy").addEventListener("click", ()=>{
+  const res = parseText(lsGet(LS_LEGACY) || "");
+  if(!res.ok.length) return;
+  addSet("Словарь из пробной версии", rowsFromParse(res));
+  $("banner").style.display = "none";
+});
+$("hideLegacy").addEventListener("click", ()=> $("banner").style.display = "none");
+
+/* ===== СКАЧИВАНИЕ ===== */
+function download(name, content, mime){
+  const blob = new Blob([content], {type: (mime || "text/plain") + ";charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=> URL.revokeObjectURL(url), 500);
+}
+function safeName(n){ return String(n || "набор").replace(/[\\/:*?"<>|]/g, "-").replace(/\s+/g, "_").slice(0, 60); }
+function csvCell(v){ const s = String(v == null ? "" : v); return /[;"\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+function setToCsv(set){
+  const L = ["Русский;V1;Транскрипция V1;V2;Транскрипция V2;V3;Транскрипция V3"];
+  for(const r of (set.w || [])){
+    const en = String(r[1] || "").split("|").map(s=>s.trim());
+    const tr = String(r[2] || "").split("|").map(s=>s.trim());
+    L.push([r[0] || "", en[0] || "", tr[0] || "", en[1] || "", tr[1] || "", en[2] || "", tr[2] || ""].map(csvCell).join(";"));
+  }
+  return "\uFEFF" + L.join("\r\n");
+}
+$("dlJson").addEventListener("click", ()=>{
+  const s = activeSet(); if(!s) return;
+  download(safeName(s.n) + ".json", JSON.stringify({i: s.i, n: s.n, d: s.d, w: setToRows(s)}, null, 2), "application/json");
+});
+$("dlCsv").addEventListener("click", ()=>{
+  const s = activeSet(); if(!s) return;
+  download(safeName(s.n) + ".csv", setToCsv(s), "text/csv");
+});
+
+/* ===== ВЫДАЧА УЧЕНИКУ ===== */
+function issueRows(s){
+  const rows = s.w || [];
+  if(issueScope === "selected") return rows.filter((r, i) => selectedRows.has(i));
+  if(issueScope === "unsent") return rows.filter(r => !rowSent(r));
+  return rows.slice();
+}
+function renderIssue(){
+  const s = activeSet();
+  if(!s) return;
+  const all = s.w || [];
+  const scoped = issueRows(s);
+  const rowsIssue = onlyGood ? scoped.filter(r => !rowProblem(r)) : scoped;
+  const ready = rowsIssue.filter(r => !rowProblem(r));
+  const bad = rowsIssue.filter(r => rowProblem(r));
+  const issue = { i: s.i, n: s.n, d: s.d, w: rowsIssue };
+  const base = ($("baseUrl").value || "").trim() || "motya.html";
+  const link = buildLink(base, issue);
+  const code = packSet(issue);
+  $("linkBox").value = link;
+  $("codeBox").value = code;
+  $("openLink").setAttribute("href", link);
+  const linkOk = link.length <= WARN_LEN;
+  const canIssue = ready.length > 0 && (!bad.length || onlyGood);
+  $("linkSize").textContent = "ссылка " + link.length + " симв.";
+  $("codeSize").textContent = "код " + code.length + " симв.";
+  $("copyLink").disabled = !canIssue || !linkOk;
+  $("copyCode").disabled = !canIssue;
+
+  let stat = "будет выдано: " + wordsCount(rowsIssue.length);
+  if(issueScope === "selected"){
+    stat = scoped.length
+      ? "будет выдано: " + wordsCount(rowsIssue.length) + " из выбранных " + scoped.length
+      : "строки не выбраны — отметьте их в таблице";
+  }else if(issueScope === "unsent"){
+    stat = "не отправлено: " + scoped.length + " из " + all.length + " · будет выдано: " + wordsCount(rowsIssue.length);
+  }
+  $("issueScopeStat").textContent = stat;
+
+  const warn = $("issueWarn");
+  let html = "";
+  if(!scoped.length){
+    html += issueScope === "selected"
+      ? '<div class="err"><b>Строки не выбраны.</b> Отметьте галочками нужные строки в таблице — или выберите «Весь набор».</div>'
+      : issueScope === "unsent"
+        ? '<div class="hint">Все строки уже отмечены как отправленные ✓ — отправлять больше нечего.</div>'
+        : '<div class="err"><b>Выдавать нечего:</b> в наборе нет строк.</div>';
+  }
+    else if(!ready.length) html += '<div class="err"><b>Выдавать нечего:</b> в этой выборке нет готовых строк — заполните русский и английскую форму.</div>';
+  else if(!linkOk) html += '<div class="err"><b>Ссылка слишком длинная</b> (' + link.length + ' символов). Пришлите ученику код — он вставит его сам. Набор можно уменьшить: уберите слова или разделите его на два набора.</div>';
+  if(bad.length && ready.length) html += '<div class="err"><b>Не готовы к выдаче: ' + bad.length + ' ' + plural(bad.length, "строка", "строки", "строк") + '</b>'
+    + '<div class="err-list">' + bad.slice(0, 40).map(b => '<div>строка ' + b.n + (b.ru ? ' («' + esc(b.ru) + '»)' : '') + ' — ' + esc(b.p) + "</div>").join("")
+    + (bad.length > 40 ? '<div class="muted">…и ещё ' + (bad.length - 40) + "</div>" : "") + "</div>"
+    + (onlyGood
+        ? '<div style="margin-top:8px">Выдаются только готовые строки: <b>' + ready.length + "</b>.</div>"
+        : '<div class="row" style="margin-top:8px"><button class="small" id="dropBad">Выдать только готовые строки (' + ready.length + ')</button></div>')
+    + "</div>";
+  warn.innerHTML = html;
+  const b = $("dropBad");
+  if(b) b.onclick = ()=>{ onlyGood = true; renderIssue(); renderMeta(); };
+
+  $("baseHint").textContent = /motya\.html$/i.test(base)
+    ? "Ученический файл будет искаться рядом с этим файлом."
+    : "Проверьте путь: ученик должен открыть именно этот адрес.";
+
+  const rows = ready.map((r, i) => "<tr><td>" + (i+1) + "</td><td>" + esc(r[0]) + "</td><td>" + esc(String(r[1]||"").split("|").join(" / ")) + '</td><td class="trans">' + esc(String(r[2]||"").split("|").filter(Boolean).join("  ")) + "</td></tr>").join("");
+  $("pupilPreview").innerHTML = '<div class="muted" style="margin-top:6px">Готовы к выдаче: ' + wordsCount(ready.length)
+    + (bad.length && !onlyGood ? " · не готовы и ученику не покажутся: " + bad.length : "") + "</div>"
+    + '<div style="max-height:44vh;overflow:auto"><table class="prev-tbl"><tr><th>№</th><th>Русский</th><th>English</th><th>Транскрипция</th></tr>' + rows + "</table></div>";
+}
+$("baseUrl").addEventListener("input", renderIssue);
+
+/* --- копирование --- */
+async function copyText(text, box, btn){
+  let done = false;
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){ await navigator.clipboard.writeText(text); done = true; }
+  }catch(e){ /* пробуем запасной способ */ }
+  if(!done){
+    try{
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed"; ta.style.left = "-9999px"; ta.style.top = "0";
+      document.body.appendChild(ta); ta.select();
+      ta.setSelectionRange(0, text.length);
+      done = document.execCommand("copy");
+      ta.remove();
+    }catch(e){ done = false; }
+  }
+  const old = btn.textContent;
+  btn.textContent = done ? "Скопировано ✅" : "Скопируй вручную";
+  if(!done && box){ box.focus(); box.select(); box.setSelectionRange(0, text.length); }
+  setTimeout(()=> btn.textContent = old, 1800);
+}
+$("copyLink").addEventListener("click", e => copyText($("linkBox").value, $("linkBox"), e.currentTarget));
+$("copyCode").addEventListener("click", e => copyText($("codeBox").value, $("codeBox"), e.currentTarget));
+
+/* ===== ЗАПУСК ===== */
+function renderAll(){ renderList(); renderEditor(); renderIssue(); }
+$("baseUrl").value = lsGet(LS_BASE_URL) || "motya.html";
+$("baseUrl").addEventListener("change", ()=>{ lsSet(LS_BASE_URL, $("baseUrl").value.trim() || "motya.html"); });
+if(!lsGet(LS_SETS) && !loadSets().length) lsSet(LS_SETS, "[]");
+renderAll();
+checkLegacy();
+</script>
+</body>
+</html>
