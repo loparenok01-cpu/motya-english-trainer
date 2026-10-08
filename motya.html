@@ -16,20 +16,26 @@
   .wrap{max-width:760px;margin:0 auto;padding:18px}
   header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
   h1{margin:0 0 6px;font-size:26px;letter-spacing:.3px;flex:1}
-  h1 small{display:block;font-weight:400;font-size:13px;opacity:.7}
-  .mute-btn{background:#fff;border:1px solid #cfe3d2;border-radius:12px;padding:8px 12px;font-size:20px;cursor:pointer;box-shadow:0 3px 0 #cfe3d2;min-width:46px;min-height:46px}
+  h1 small{display:block;font-weight:400;font-size:13.5px;opacity:.82}
+  .mute-btn{background:#fff;border:1px solid #cfe3d2;border-radius:12px;padding:8px 12px;font-size:20px;cursor:pointer;box-shadow:0 3px 0 #cfe3d2;min-width:46px;min-height:46px;transition:background-color .15s ease,border-color .15s ease,box-shadow .15s ease,transform .05s ease}
+  .mute-btn:hover{background:#f2faf4;border-color:#b5dbbd}
   .mute-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #cfe3d2}
-  .card{background:#fff;border-radius:18px;padding:16px 18px;box-shadow:var(--shadow);margin:12px 0}
+  .card{background:#fff;border-radius:18px;padding:18px 20px;box-shadow:var(--shadow);margin:14px 0;animation:softIn .2s ease both}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  button, .btn{background:var(--btn);color:#fff;border:0;border-radius:12px;padding:10px 14px;font-size:15px;cursor:pointer;box-shadow:0 3px 0 var(--btn-shadow);transition:transform .05s;min-height:44px}
+  button, .btn{background:var(--btn);color:#fff;border:0;border-radius:12px;padding:10px 14px;font-size:15px;cursor:pointer;box-shadow:0 3px 0 var(--btn-shadow);transition:background-color .15s ease,border-color .15s ease,box-shadow .15s ease,color .15s ease,transform .05s ease;min-height:44px}
+  button:hover:not(:disabled), .btn:hover{background:#2f6f44}
   button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--btn-shadow)}
   button:disabled{opacity:.55;cursor:default;transform:none}
   button.ghost{background:#fff;color:var(--ink);box-shadow:0 3px 0 #cfe3d2;border:1px solid #cfe3d2}
-  button.small{padding:6px 10px;font-size:13px;min-height:34px}
-  input[type=text], input[type=number], textarea, select{border:1px solid #cfe3d2;border-radius:12px;padding:10px 12px;font-size:16px;background:#f7fbf7;color:var(--ink);width:100%}
+  button.ghost:hover:not(:disabled){background:#f2faf4;border-color:#b5dbbd}
+  button.small{padding:6px 10px;font-size:13.5px;min-height:34px}
+  input[type=text], input[type=number], textarea, select{border:1px solid #cfe3d2;border-radius:12px;padding:10px 12px;font-size:16px;background:#f7fbf7;color:var(--ink);width:100%;transition:border-color .15s ease,box-shadow .15s ease,background-color .15s ease}
+  input[type=text]:hover, input[type=number]:hover, textarea:hover, select:hover{border-color:#b5dbbd}
+  input[type=text]:focus, input[type=number]:focus, textarea:focus, select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(57,128,79,.18);background:#fff;outline:none}
+  input:focus-visible, textarea:focus-visible, select:focus-visible{outline:none}
   textarea{min-height:96px;font-family:ui-monospace,Consolas,monospace}
-  .muted{opacity:.7;font-size:13px}
-  .tag{display:inline-block;background:var(--accent2);color:var(--ink);border-radius:999px;padding:3px 10px;font-size:12px;margin-right:6px}
+  .muted{opacity:.8;font-size:13.5px}
+  .tag{display:inline-block;background:var(--accent2);color:var(--ink);border-radius:999px;padding:3px 10px;font-size:12.5px;font-weight:600;margin-right:6px}
   .web{width:100%;height:150px;display:block}
   .node{fill:#fff;stroke:var(--accent);stroke-width:3}
   .node.done{fill:var(--ok)}
@@ -39,54 +45,64 @@
   .spider.shake{animation:shake .4s}
   @keyframes shake{0%,100%{transform:translate(0,0)}25%{transform:translate(-6px,0)}75%{transform:translate(6px,0)}}
   .bar{height:10px;background:#eaf3ea;border-radius:999px;overflow:hidden;margin:8px 0}
-  .bar > div{height:100%;background:linear-gradient(90deg,var(--accent),#bfe0c4);width:0%;transition:width .4s}
+  .bar > div{height:100%;background:linear-gradient(90deg,var(--accent),#bfe0c4);width:0%;transition:width .45s cubic-bezier(.4,0,.2,1)}
   .feedback{min-height:28px;font-weight:600;margin-top:6px}
-  .feedback.ok{color:#2f7a3f}
-  .feedback.bad{color:#b14a4a}
+  .feedback.ok{color:#2f7a3f;animation:popIn .18s ease both}
+  .feedback.bad{color:#b14a4a;animation:popIn .18s ease both}
   .prompt-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .prompt-row .word{font-size:22px;flex:1}
+  .prompt-row .word .pw{font-weight:700}
+  .prompt-row .word .pw.en{color:#14602e}
+  .prompt-row .word .trans{font-weight:400}
   details{margin-top:10px}
-  summary{cursor:pointer;color:var(--ink);font-weight:600}
-  .hint{font-size:13px;color:#5a7a60}
+  summary{cursor:pointer;color:var(--ink);font-weight:600;transition:color .15s ease}
+  summary:hover{color:#265032}
+  .hint{font-size:13px;color:#4d6e54}
   .finish{text-align:center}
   .finish h2{margin:4px 0}
   .timer{font-variant-numeric:tabular-nums;font-size:20px;font-weight:700;color:var(--ink)}
   .timer.warn{color:#b14a4a}
   table.records{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
-  table.records th, table.records td{padding:6px 8px;border-bottom:1px solid #e3efe3;text-align:left}
+  table.records th, table.records td{padding:7px 8px;border-bottom:1px solid #e3efe3;text-align:left}
+  table.records tr:hover td{background:#f7fdf8}
   table.records th{background:var(--accent2);font-weight:600}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .trans{font-size:15px;font-style:italic;margin-top:6px;font-family:"Lucida Sans Unicode","Arial Unicode MS","Segoe UI Symbol",sans-serif;letter-spacing:.5px;font-weight:500}
   .choice-btn{background:#f7fbf7;border:2px solid var(--accent2);color:var(--ink);padding:14px 10px;border-radius:12px;font-size:16px;font-weight:500;cursor:pointer;transition:all .15s;text-align:center;min-height:70px;display:flex;flex-direction:column;justify-content:center}
   .choice-btn:hover:not(:disabled){background:var(--accent2)}
   .choice-btn:active:not(:disabled){transform:translateY(1px)}
-  .choice-btn.correct{background:#e6f6e9;border-color:#2f7a3f;color:#1f6b32}
-  .choice-btn.wrong{background:#fdecec;border-color:#b14a4a;color:#a33232}
+  .choice-btn.correct{background:#e6f6e9;border-color:#2f7a3f;color:#1f6b32;animation:popIn .16s ease both}
+  .choice-btn.wrong{background:#fdecec;border-color:#b14a4a;color:#a33232;animation:popIn .16s ease both}
   .choice-btn:disabled{cursor:default;opacity:.85}
   .choice-btn.hidden-option{visibility:hidden;pointer-events:none}
   .choices-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
   .choice-btn .trans{font-size:13px;margin-top:4px;opacity:.85;word-break:break-word;overflow-wrap:break-word;line-height:1.3}
   .choice-btn.correct .trans, .choice-btn.wrong .trans{color:inherit;opacity:.9;font-weight:600}
-  .saved-badge{display:inline-block;background:#fff3c4;color:#7a5a00;border-radius:999px;padding:2px 8px;font-size:11px;margin-left:6px;opacity:0;transition:opacity .3s}
+  .saved-badge{display:inline-block;background:#fff3c4;color:#7a5a00;border-radius:999px;padding:2px 8px;font-size:12px;font-weight:600;margin-left:6px;opacity:0;transition:opacity .25s ease}
   .saved-badge.show{opacity:1}
 
   /* экран входа */
-  .got-box{background:#f2faf3;border:1px solid var(--accent2);border-radius:14px;padding:12px 14px;margin:10px 0}
+  .got-box{background:#f2faf3;border:1px solid var(--accent2);border-radius:14px;padding:12px 14px;margin:10px 0;animation:popIn .18s ease both}
   .got-name{font-size:19px;font-weight:700;margin-top:4px}
-  .set-item{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1px solid #e3efe3;border-radius:12px;padding:10px 12px;margin-top:8px;background:#fbfefb}
+  .set-item{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1px solid #e3efe3;border-radius:12px;padding:10px 12px;margin-top:8px;background:#fbfefb;transition:border-color .15s ease,background-color .15s ease,box-shadow .15s ease}
+  .set-item:hover{border-color:#cfe6d3;background:#f6fcf7}
   .set-item .t{flex:1;min-width:150px}
   .set-item .t b{display:block}
   .progress-mini{height:6px;background:#eaf3ea;border-radius:999px;overflow:hidden;margin-top:6px}
-  .progress-mini > div{height:100%;background:var(--accent)}
-  .diff{background:#fff7d6;border:1px solid #e8d48a;border-radius:10px;padding:8px 10px;font-size:13px;margin-top:8px}
-  .btn-file{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--ink);border:1px solid #cfe3d2;border-radius:12px;padding:10px 14px;font-size:15px;cursor:pointer;box-shadow:0 3px 0 #cfe3d2;min-height:44px}
+  .progress-mini > div{height:100%;background:var(--accent);transition:width .35s ease}
+  .diff{background:#fff7d6;border:1px solid #e8d48a;border-radius:10px;padding:8px 10px;font-size:13px;margin-top:8px;animation:popIn .18s ease both}
+  .btn-file{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--ink);border:1px solid #cfe3d2;border-radius:12px;padding:10px 14px;font-size:15px;cursor:pointer;box-shadow:0 3px 0 #cfe3d2;min-height:44px;transition:background-color .15s ease,border-color .15s ease,box-shadow .15s ease,color .15s ease}
+  .btn-file:hover{background:#f2faf4;border-color:#b5dbbd}
   .err-list{max-height:190px;overflow:auto;margin-top:8px;font-size:13px}
   .err-list div{padding:5px 8px;border-bottom:1px solid #f0f4f0}
   .err-list b{color:#b14a4a}
   .prev-tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
   .prev-tbl td,.prev-tbl th{padding:5px 7px;border-bottom:1px solid #eef4ee;text-align:left}
   .err-words{color:#b14a4a;font-weight:600;text-decoration:underline wavy}
-  label.opt{display:block;margin:10px 0 4px;font-size:13px;opacity:.75}
+  label.opt{display:block;margin:14px 0 6px;font-size:13.5px;font-weight:600;color:#3d6b49}
+  #addBox{animation:popIn .18s ease both}
+  @keyframes popIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  @keyframes softIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   @media (max-width:520px){.grid{grid-template-columns:1fr}}
   @media (max-width:400px){.choices-grid{grid-template-columns:1fr}}
   @media (max-width:480px){.choice-btn{padding:10px 8px;min-height:65px;font-size:15px}.choice-btn .trans{font-size:11px}}
@@ -140,10 +156,15 @@
       <label class="opt">Режим</label>
       <select id="mode">
         <option value="ru-en">RU → EN (ввод с клавиатуры)</option>
+        <option disabled>&nbsp;</option>
         <option value="choice">👁️ Виз. выбор RU → EN (карточки)</option>
+        <option disabled>&nbsp;</option>
         <option value="en-ru">EN → RU (ввод с клавиатуры)</option>
+        <option disabled>&nbsp;</option>
         <option value="choice-en-ru">👁️ Виз. выбор EN → RU (карточки)</option>
+        <option disabled>&nbsp;</option>
         <option value="v1-to-all">🎯 V1 → V2, V3, перевод</option>
+        <option disabled>&nbsp;</option>
       </select>
       <label class="opt" id="verbFormLabel">Форма глагола</label>
       <select id="verbForm">
@@ -157,6 +178,17 @@
         <option value="fixed">📋 По порядку (как в файле)</option>
         <option value="random">🎲 В случайном порядке</option>
       </select>
+      <label class="opt">Количество слов в игре</label>
+      <select id="wordCount">
+        <option value="all">Все слова набора</option>
+        <option value="10">10 слов</option>
+        <option value="20">20 слов</option>
+        <option value="30">30 слов</option>
+        <option value="custom">✏️ Своё количество…</option>
+      </select>
+      <label class="muted" id="wordCountCustomLabel" style="display:none;margin-top:6px">Своё количество:
+        <input type="number" id="wordCountCustom" min="1" max="999" step="1" value="15" style="width:80px;margin-left:4px">
+      </label>
       <div class="row" style="margin-top:10px">
         <label class="muted"><input type="checkbox" id="timedMode"> Режим «на время»</label>
         <label class="muted" id="timeLabel" style="display:none">Длительность:
@@ -188,7 +220,7 @@
         <input type="text" id="pupil" list="pupils" placeholder="введите имя" autocomplete="off" style="margin-top:4px">
         <datalist id="pupils"></datalist>
       </label>
-      <button id="start" style="margin-left:auto;align-self:flex-end">▶ Начать</button>
+      <button id="start" style="margin-left:auto;align-self:flex-end">▶ Играть</button>
     </div>
     <div id="entryStatus" class="muted" style="margin-top:6px"></div>
 
@@ -679,7 +711,7 @@ const entry=$("entry"), game=$("game"), finish=$("finish");
 
 /* ===== СОСТОЯНИЕ ===== */
 let activeSet = null, pupil = "";
-let prefs = {mode:"ru-en", verbForm:"all", wordOrder:"fixed", timed:false, timeLimit:120};
+let prefs = {mode:"ru-en", verbForm:"all", wordOrder:"fixed", timed:false, timeLimit:120, wordLimit:"all", wordLimitN:15};
 let words = [], wordsOriginal = [], idx = 0, score = 0, mode = "ru-en", verbForm = "all", wordOrder = "fixed";
 let timed = false, timeLimit = 120, timeEndAt = 0, pausedLeft = 0, pausedAt = 0, timerPaused = false, timerInterval = null, lastTick = null;
 let stats = [], cur = null, wordStartAt = 0, sessionStart = 0, hintsUsed = 0, finishedByTime = false;
@@ -758,7 +790,7 @@ function renderEntry(){
       + '<div class="progress-mini"><div style="width:' + pct + '%"></div></div>'
       + '<span class="muted" style="font-size:11px">' + (rec.src ? escapeHtml(rec.src) + " · " : "") + fmtDateShort(rec.last) + '</span></div>';
     const bPlay = document.createElement("button");
-    bPlay.className = "small"; bPlay.textContent = "Играть";
+    bPlay.className = "small"; bPlay.textContent = "Выбрать";
     bPlay.onclick = ()=>{ activeSet = ensureSetId({i:rec.i, n:rec.n, d:rec.d, w:rec.w || []}); renderEntry(); showGameBtn(); };
     const bDel = document.createElement("button");
     bDel.className = "ghost small"; bDel.textContent = "✕"; bDel.title = "Убрать из списка";
@@ -771,7 +803,7 @@ function renderEntry(){
   $("pupils").innerHTML = pl.map(n => '<option value="' + escapeHtml(n) + '">').join("");
 }
 function guessPupil(){ return $("pupil").value.trim(); }
-function showGameBtn(){ $("start").textContent = "▶ Начать"; }
+function showGameBtn(){ $("start").textContent = "▶ Играть"; }
 
 $("btnNewSet").addEventListener("click", ()=>{
   const box = $("addBox");
@@ -856,7 +888,18 @@ $("mode").addEventListener("change", e=>{
   const m = e.target.value;
   $("verbFormLabel").style.display = (m === "ru-en" || m === "choice") ? "" : "none";
 });
+$("wordCount").addEventListener("change", e=>{
+  $("wordCountCustomLabel").style.display = e.target.value === "custom" ? "" : "none";
+});
 $("timedMode").addEventListener("change", e=>{ $("timeLabel").style.display = e.target.checked ? "" : "none"; });
+function validWordLimit(v){ return ["all","10","20","30","custom"].includes(v) ? v : "all"; }
+function wordLimitNum(){
+  const v = prefs.wordLimit;
+  if(v === "custom") return Math.max(1, Math.min(999, prefs.wordLimitN | 0));
+  if(v === "all") return 0;
+  const n = parseInt(v, 10);
+  return n > 0 ? n : 0;
+}
 function applyPrefsToUi(){
   $("mode").value = prefs.mode; $("verbForm").value = prefs.verbForm;
   $("wordOrder").value = prefs.wordOrder;
@@ -864,11 +907,17 @@ function applyPrefsToUi(){
   $("timeLimit").value = String(prefs.timeLimit);
   $("timeLabel").style.display = prefs.timed ? "" : "none";
   $("verbFormLabel").style.display = (prefs.mode === "ru-en" || prefs.mode === "choice") ? "" : "none";
+  $("wordCount").value = validWordLimit(prefs.wordLimit);
+  $("wordCountCustom").value = String(prefs.wordLimitN || 15);
+  $("wordCountCustomLabel").style.display = $("wordCount").value === "custom" ? "" : "none";
 }
 function readPrefs(){
   prefs.mode = $("mode").value; prefs.verbForm = $("verbForm").value;
   prefs.wordOrder = $("wordOrder").value; prefs.timed = $("timedMode").checked;
   prefs.timeLimit = parseInt($("timeLimit").value, 10) || 120;
+  prefs.wordLimit = validWordLimit($("wordCount").value);
+  const wn = parseInt($("wordCountCustom").value, 10);
+  prefs.wordLimitN = Math.max(1, Math.min(999, isNaN(wn) ? 15 : wn));
   savePrefs();
 }
 
@@ -876,6 +925,10 @@ function readPrefs(){
 function buildWords(useRandom){
   const arr = useRandom ? shuffle(wordsOriginal) : wordsOriginal.slice();
   words = arr.map(w => Object.assign({}, w, {_i: wordsOriginal.indexOf(w)}));
+}
+function applyWordLimit(){
+  const lim = wordLimitNum();
+  if(lim > 0 && words.length > lim) words = words.slice(0, lim);
 }
 $("start").addEventListener("click", ()=>{
   SFX.ensure();
@@ -900,6 +953,7 @@ $("start").addEventListener("click", ()=>{
 
   onlyErrors = false;
   buildWords(wordOrder === "random");
+  applyWordLimit();
   resetSession();
   entry.style.display = "none"; finish.style.display = "none"; game.style.display = "block";
   drawWeb(); render();
@@ -1046,7 +1100,8 @@ function render(){
   else if(mode === "v1-to-all") promptText = w.en[0] + " (введи: V2, V3, перевод)";
 
   const trans = (mode === "choice") ? null : getTargetTrans(w);
-  $("prompt").innerHTML = escapeHtml(promptText)
+  const enPrompt = (mode === "en-ru" || mode === "choice-en-ru" || mode === "v1-to-all");
+  $("prompt").innerHTML = '<span class="pw' + (enPrompt ? " en" : "") + '">' + escapeHtml(promptText) + "</span>"
     + (trans ? '<div class="trans">' + escapeHtml(trans) + '</div>' : "");
   $("counter").textContent = Math.min(idx+1, words.length) + " / " + words.length;
   $("setTag").textContent = activeSet ? activeSet.n : "";
@@ -1283,6 +1338,7 @@ function plural(n, one, few, many){
 $("again").addEventListener("click", ()=>{
   onlyErrors = false;
   buildWords(wordOrder === "random");
+  applyWordLimit();
   resetSession();
   finish.style.display = "none"; game.style.display = "block"; drawWeb(); render();
   if(!isChoiceMode(mode)) $("answer").focus();

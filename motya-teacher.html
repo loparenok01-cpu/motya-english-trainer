@@ -14,50 +14,70 @@
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:linear-gradient(160deg,var(--bg1),var(--bg2));min-height:100vh}
   .wrap{max-width:980px;margin:0 auto;padding:18px}
-  h1{margin:0;font-size:25px}
-  h1 small{display:block;font-weight:400;font-size:13px;opacity:.7;margin-top:4px}
-  .card{background:#fff;border-radius:18px;padding:16px 18px;box-shadow:var(--shadow);margin:12px 0}
+  h1{margin:0;font-size:26px;letter-spacing:.2px}
+  h1 small{display:block;font-weight:400;font-size:13.5px;opacity:.82;margin-top:5px}
+  .card{background:#fff;border-radius:18px;padding:18px 20px;box-shadow:var(--shadow);margin:14px 0}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  button, .btn{background:var(--btn);color:#fff;border:0;border-radius:12px;padding:10px 14px;font-size:15px;cursor:pointer;box-shadow:0 3px 0 var(--btn-shadow);min-height:44px}
+  button, .btn{background:var(--btn);color:#fff;border:0;border-radius:12px;padding:10px 14px;font-size:15px;cursor:pointer;box-shadow:0 3px 0 var(--btn-shadow);min-height:44px;transition:background-color .15s ease,border-color .15s ease,box-shadow .15s ease,color .15s ease,transform .05s ease}
+  button:hover:not(:disabled), .btn:hover{background:#2f6f44}
   button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--btn-shadow)}
   button:disabled{opacity:.5;cursor:default;transform:none;box-shadow:none}
   button.ghost{background:#fff;color:var(--ink);box-shadow:0 3px 0 #cfe3d2;border:1px solid #cfe3d2}
-  button.small{padding:6px 11px;font-size:13px;min-height:34px}
+  button.ghost:hover:not(:disabled){background:#f2faf4;border-color:#b5dbbd}
+  button.small{padding:6px 11px;font-size:13.5px;min-height:34px}
   button.danger{background:#fff;color:#a33;box-shadow:0 3px 0 #e0c0c0;border:1px solid #e0c0c0}
-  input[type=text], textarea, select{border:1px solid #cfe3d2;border-radius:12px;padding:9px 12px;font-size:16px;background:#f7fbf7;color:var(--ink);width:100%}
-  textarea{min-height:80px;font-family:ui-monospace,Consolas,monospace;font-size:13px;resize:vertical}
-  label.opt{display:block;margin:12px 0 4px;font-size:13px;opacity:.75}
-  .muted{opacity:.7;font-size:13px}
-  .hint{font-size:12px;color:#5a7a60;margin-top:6px}
-  .tag{display:inline-block;background:var(--accent2);color:var(--ink);border-radius:999px;padding:3px 10px;font-size:12px;margin-right:6px}
-  .btn-file{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--ink);border:1px solid #cfe3d2;border-radius:12px;padding:9px 14px;font-size:14px;cursor:pointer;box-shadow:0 3px 0 #cfe3d2;text-decoration:none;min-height:42px}
-  .set-item{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1px solid #e3efe3;border-radius:12px;padding:10px 12px;margin-top:8px;background:#fbfefb}
-  .set-item.sel{border-color:var(--accent);background:#f3fbf4;box-shadow:0 0 0 2px #d9efe0}
+  button.danger:hover:not(:disabled){background:#fdf2f2;border-color:#dca9a9;color:#8d2a2a}
+  input[type=text], textarea, select{border:1px solid #cfe3d2;border-radius:12px;padding:9px 12px;font-size:16px;background:#f7fbf7;color:var(--ink);width:100%;transition:border-color .15s ease,box-shadow .15s ease,background-color .15s ease}
+  input[type=text]:hover, textarea:hover, select:hover{border-color:#b5dbbd}
+  input[type=text]:focus, textarea:focus, select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(57,128,79,.18);background:#fff;outline:none}
+  input:focus-visible, textarea:focus-visible, select:focus-visible{outline:none}
+  textarea{min-height:80px;font-family:ui-monospace,Consolas,monospace;font-size:13.5px;resize:vertical}
+  label.opt{display:block;margin:14px 0 6px;font-size:13.5px;font-weight:600;color:#3d6b49}
+  .muted{opacity:.8;font-size:13.5px}
+  .hint{font-size:13px;color:#4d6e54;margin-top:6px;line-height:1.45}
+  .tag{display:inline-block;background:var(--accent2);color:var(--ink);border-radius:999px;padding:3px 10px;font-size:12.5px;font-weight:600;margin-right:6px}
+  .btn-file{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--ink);border:1px solid #cfe3d2;border-radius:12px;padding:9px 14px;font-size:14.5px;cursor:pointer;box-shadow:0 3px 0 #cfe3d2;text-decoration:none;min-height:42px;transition:background-color .15s ease,border-color .15s ease,box-shadow .15s ease,color .15s ease}
+  .btn-file:hover{background:#f2faf4;border-color:#b5dbbd}
+  .set-item{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1px solid #e3efe3;border-radius:12px;padding:10px 12px;margin-top:8px;background:#fbfefb;transition:border-color .15s ease,background-color .15s ease,box-shadow .15s ease}
+  .set-item:hover{border-color:#cfe6d3;background:#f6fcf7}
+  .set-item.sel{border-color:#39804f;background:#eef8f0;box-shadow:0 0 0 3px rgba(57,128,79,.30);animation:selFlash .3s ease}
+  @keyframes selFlash{from{background:#d9f0dd;box-shadow:0 0 0 6px rgba(57,128,79,.38)}}
+  .set-del.locked{opacity:.5;cursor:not-allowed}
   .set-item .t{flex:1;min-width:160px}
   .set-item .t b{display:block}
   .edit{width:100%;border-collapse:collapse;font-size:14px}
-  .edit th{background:var(--accent2);font-weight:600;text-align:left;padding:6px 8px;position:sticky;top:0}
+  .edit th{background:var(--accent2);font-weight:600;text-align:left;padding:7px 8px;position:sticky;top:0}
   .edit td{padding:3px 5px;border-bottom:1px solid #eef4ee}
+  .edit tbody tr:hover td{background:#f7fdf8}
   .edit input{padding:7px 9px;font-size:14px;border-radius:9px}
   .edit td.n{text-align:right;color:#a33;width:34px}
   .edit tr.bad td input{background:#fff3f3;border-color:#e8a5a5}
   .edit td.sel,.edit th.sel{width:30px;text-align:center;padding:3px 2px}
   .edit td.sel input,.edit th.sel input{width:16px;height:16px;padding:0;accent-color:#39804f;cursor:pointer}
-  .edit tr.selected td{background:#f2faf3}
-  .banner{background:#fff7d6;border:1px solid #e8d48a;border-radius:14px;padding:12px 14px}
-  .err{background:#fff3f3;border:1px solid #e8a5a5;border-radius:12px;padding:10px 12px;margin-top:10px;font-size:13px}
+  .edit tr.selected td{background:#eef8f0;box-shadow:inset 3px 0 0 var(--accent)}
+  .err{background:#fff3f3;border:1px solid #e8a5a5;border-radius:12px;padding:10px 12px;margin-top:10px;font-size:13.5px}
   .err b{color:#a33}
   .err-list{max-height:170px;overflow:auto;margin-top:6px}
   .err-list div{padding:4px 6px;border-bottom:1px solid #f0f4f0}
-  .prev-tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
-  .prev-tbl th,.prev-tbl td{padding:5px 7px;border-bottom:1px solid #eef4ee;text-align:left}
-  .prev-tbl th{background:#f2faf3}
+  .prev-tbl{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
+  .prev-tbl th,.prev-tbl td{padding:6px 8px;border-bottom:1px solid #eef4ee;text-align:left}
+  .prev-tbl th{background:#f2faf3;font-weight:600}
   .trans{font-family:"Lucida Sans Unicode","Arial Unicode MS","Segoe UI Symbol",sans-serif;font-style:italic}
-  .saved-badge{display:inline-block;background:#fff3c4;color:#7a5a00;border-radius:999px;padding:2px 9px;font-size:11px;opacity:0;transition:opacity .3s}
+  .saved-badge{display:inline-block;background:#fff3c4;color:#7a5a00;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:600;opacity:0;transition:opacity .25s ease}
   .saved-badge.show{opacity:1}
   details{margin-top:10px}
-  summary{cursor:pointer;font-weight:600}
+  summary{cursor:pointer;font-weight:600;transition:color .15s ease}
+  summary:hover{color:#265032}
   .count-ok{color:#2f7a3f}
+  #issueWarn.pop{animation:popIn .18s ease both}
+  .tabs{display:flex;gap:4px;margin:6px 0 0;padding:4px;background:#e2f0e5;border-radius:14px;width:fit-content;max-width:100%}
+  .tab{background:transparent;color:#3d6b49;box-shadow:none;border:0;border-radius:10px;padding:9px 18px;font-size:15px;font-weight:600;min-height:42px;transition:background-color .15s ease,color .15s ease,box-shadow .15s ease}
+  .tab:hover:not(:disabled){background:rgba(255,255,255,.7);color:var(--ink)}
+  .tab:active:not(:disabled){transform:none;box-shadow:none}
+  .tab.on{background:#fff;color:var(--ink);box-shadow:0 2px 6px rgba(46,93,58,.16)}
+  #editorCard,#issueCard{animation:softIn .18s ease both}
+  @keyframes popIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  @keyframes softIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   :focus-visible{outline:3px solid var(--ink);outline-offset:2px}
   @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
@@ -72,28 +92,21 @@
   <a class="btn-file" href="motya.html" target="_blank" rel="noopener">Ученический файл ↗</a>
 </header>
 
-<div id="banner" class="banner" style="display:none;margin-top:12px">
-  <b>Словарь из пробной версии</b>
-  <div class="muted" id="bannerText" style="margin-top:4px"></div>
-  <div class="row" style="margin-top:8px">
-    <button id="importLegacy" class="small">Импортировать как набор</button>
-    <button class="ghost small" id="hideLegacy">Скрыть</button>
-  </div>
-</div>
-
 <div class="card">
   <div class="row" style="justify-content:space-between">
     <div><span class="tag">наборы</span><b id="setsCount"></b></div>
     <div class="row">
       <button id="newEmpty">+ Пустой набор</button>
-      <button id="newFromBase">+ Из базы глаголов</button>
-      <label class="btn-file">📂 Загрузить файл<input type="file" id="loadFile" accept=".json,.csv,.txt,.tsv" hidden></label>
     </div>
   </div>
   <div id="setList"></div>
 
-  <details>
-    <summary>Вставить набор текстом (CSV / TSV / JSON / «|»)</summary>
+  <div class="row" style="margin-top:10px">
+    <label class="btn-file">📂 Вставить набор из файла<input type="file" id="loadFile" accept=".json,.csv,.txt,.tsv" hidden></label>
+  </div>
+
+  <details id="pasteDetails">
+    <summary>Вставить новый набор текстом (CSV / TSV / JSON / «|»)</summary>
     <textarea id="pasteBox" style="margin-top:8px" placeholder="Вставьте сюда текст с вашим словарём.
 
 Можно так:
@@ -111,6 +124,11 @@
     </div>
     <div id="pastePreview"></div>
   </details>
+</div>
+
+<div id="tabs" class="tabs" role="tablist" style="display:none">
+  <button type="button" class="tab on" id="tabEdit" role="tab" aria-selected="true" aria-controls="editorCard">Редактор набора</button>
+  <button type="button" class="tab" id="tabIssue" role="tab" aria-selected="false" aria-controls="issuePanel">Выдать ученику</button>
 </div>
 
 <div class="card" id="editorCard" style="display:none">
@@ -146,17 +164,16 @@
   </div>
   <div class="row" style="margin-top:10px">
     <button id="addRow">+ Строка</button>
-    <button class="ghost small" id="pasteInto">Вставить в конец</button>
     <button class="danger small" id="delSelected" disabled>Удалить выбранные</button>
     <button class="ghost small" id="markSent" disabled title="Дописать в заметку отметку «✓ дд.мм.гггг»">✓ Отметить отправленными</button>
     <button class="ghost small" id="unmarkSent" disabled title="Убрать отметку из заметок выбранных строк">Снять отметку</button>
     <span id="selCount" class="muted"></span>
-    <span id="markStat" class="muted"></span>
-    <button class="ghost small" id="dlJson">⬇ Набор в JSON</button>
-    <button class="ghost small" id="dlCsv">⬇ Набор в CSV</button>
-    <button class="ghost small" id="dupSelected" disabled title="Создать новый набор только из выбранных строк">⧉ Копировать выбранные</button>
-    <button class="ghost small" id="dupSet" style="margin-left:auto">⧉ Копировать набор</button>
-    <button class="danger small" id="delSet">✕ Удалить набор</button>
+    <button class="ghost small" id="dupSelected" disabled title="Создать новый набор только из выбранных строк" style="margin-left:auto">⧉ Копировать выбранные</button>
+  </div>
+  <div class="row" style="margin-top:8px">
+    <button class="ghost small" id="dlJson">⬇ Импорт в JSON</button>
+    <button class="ghost small" id="dlCsv">⬇ Импорт в CSV</button>
+    <span id="markStat" class="muted" style="margin-left:auto"></span>
   </div>
   <div style="overflow:auto;max-height:54vh;margin-top:8px;border:1px solid #eef4ee;border-radius:12px">
     <table class="edit">
@@ -172,7 +189,7 @@
     </table>
   </div>
   <details id="quickAddBox" style="margin-top:10px">
-    <summary>➕ Добавить свои глаголы в этот набор</summary>
+    <summary>➕ Добавить свои глаголы по шаблону</summary>
     <textarea id="quickAdd" style="margin-top:8px" placeholder="Одно слово в строке, формы через «|», транскрипции не обязательны:
 бежать | run | ran | run
 смотреть | see | saw | seen"></textarea>
@@ -188,6 +205,7 @@
   </div>
 </div>
 
+<div id="issuePanel" style="display:none">
 <div class="card" id="issueCard" style="display:none">
   <b>Выдать ученику</b>
   <div class="muted" style="margin-top:4px">
@@ -228,6 +246,7 @@
     <summary>Что увидит ученик</summary>
     <div id="pupilPreview"></div>
   </details>
+</div>
 </div>
 
 <script>
@@ -566,7 +585,7 @@ const TRANS_BASE = "wake|[weɪk]\nwoke|[wəʊk]\nwoken|[ˈwəʊkən]\nbe|[biː]\
 
 /* ===== УТИЛИТЫ И СОСТОЯНИЕ ===== */
 const LS_SETS = "motya_sets_v1", LS_ACTIVE = "motya_active_v1";
-const LS_BASE_URL = "motya_base_url_v1", LS_LEGACY = "motya_last_dict_v1";
+const LS_BASE_URL = "motya_base_url_v1";
 
 function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
 function lsSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
@@ -587,7 +606,12 @@ function saveSets(list){ lsSet(LS_SETS, JSON.stringify(list)); }
 function newId(){ return "s" + Date.now().toString(36) + Math.floor(Math.random() * 1679616).toString(36); }
 function activeSet(){ const id = lsGet(LS_ACTIVE); return loadSets().find(s => s.i === id) || null; }
 function activeId(){ return lsGet(LS_ACTIVE); }
-function setActive(id){ lsSet(LS_ACTIVE, id); onlyGood = false; selectedRows = new Set(); }
+function setActive(id){
+  lsSet(LS_ACTIVE, id);
+  onlyGood = false;
+  selectedRows = new Set();
+  rowFilter = ""; rowSort = ""; noteFilter = "";
+}
 function currentSets(){ return loadSets(); }
 function updateSet(id, mutate){
   const list = loadSets();
@@ -640,7 +664,7 @@ function renderList(){
   $("setsCount").textContent = list.length ? "(" + list.length + ")" : "";
   box.innerHTML = "";
   if(!list.length){
-    box.innerHTML = '<div class="muted" style="margin-top:8px">Наборов пока нет. Создайте пустой, возьмите базу глаголов или загрузите файл.</div>';
+    box.innerHTML = '<div class="muted" style="margin-top:8px">Наборов пока нет. Создайте пустой или загрузите файл.</div>';
     return;
   }
   const act = lsGet(LS_ACTIVE);
@@ -652,19 +676,26 @@ function renderList(){
       + '<span class="muted">' + wordsCount((s.w||[]).length) + ' · ' + esc(s.d || "") + ' · id ' + esc(s.i)
       + (bad ? ' · <span style="color:#a33">' + bad + ' строк не готово</span>' : '') + '</span></div>';
     const bOpen = document.createElement("button");
-    bOpen.className = "small"; bOpen.textContent = "Открыть";
+    bOpen.className = "set-open small"; bOpen.textContent = "Открыть";
     bOpen.onclick = ()=>{ setActive(s.i); renderAll(); };
     const bDup = document.createElement("button");
-    bDup.className = "ghost small"; bDup.textContent = "⧉";
+    bDup.className = "set-dup small"; bDup.textContent = "Копировать";
     bDup.title = "Дублировать набор";
     bDup.onclick = ()=> duplicateSet(s.i);
     const bDel = document.createElement("button");
-    bDel.className = "ghost small"; bDel.textContent = "✕";
+    bDel.className = "set-del small"; bDel.textContent = "Удалить";
+    const prot = isVerbBase(s);
+    bDel.title = prot ? "Набор глаголов защищён от удаления" : "Удалить набор";
+    if(prot) bDel.classList.add("locked");
     bDel.onclick = ()=>{
+      if(isVerbBase(s)){
+        alert("«Набор глаголов» защищён от удаления — нажмите «Копировать» и работайте с копией.");
+        return;
+      }
       if(!confirm("Удалить набор «" + s.n + "»? У учеников он останется, но новый уже не выдать.")) return;
       const l = loadSets().filter(x => x.i !== s.i);
       saveSets(l);
-      if(lsGet(LS_ACTIVE) === s.i) lsSet(LS_ACTIVE, (l[0] || {}).i || "");
+      if(lsGet(LS_ACTIVE) === s.i) setActive((l[0] || {}).i || "");
       renderAll();
     };
     div.appendChild(bOpen); div.appendChild(bDup); div.appendChild(bDel);
@@ -677,6 +708,8 @@ let rowFilter = "";
 let rowSort = "";
 let noteFilter = "";
 let issueScope = "all";
+let curTab = "edit";
+let lastIssueHtml = null;
 let selectedRows = new Set();
 
 function rowSent(r){
@@ -703,13 +736,32 @@ function rowVisible(r, i){
   const q = rowFilter.toLowerCase();
   return [r[0], r[1], r[2], r[3]].some(v => String(v == null ? "" : v).toLowerCase().indexOf(q) >= 0);
 }
+function syncTabs(){
+  const s = activeSet();
+  if(!s) curTab = "edit";
+  $("editorCard").style.display = (s && curTab === "edit") ? "" : "none";
+  $("issueCard").style.display = s ? "" : "none";
+  $("issuePanel").style.display = (s && curTab === "issue") ? "" : "none";
+  $("tabs").style.display = s ? "" : "none";
+  $("tabEdit").classList.toggle("on", curTab === "edit");
+  $("tabIssue").classList.toggle("on", curTab === "issue");
+  $("tabEdit").setAttribute("aria-selected", curTab === "edit" ? "true" : "false");
+  $("tabIssue").setAttribute("aria-selected", curTab === "issue" ? "true" : "false");
+}
+function setTab(t){
+  if(curTab === t) return;
+  curTab = t;
+  syncTabs();
+}
 function renderEditor(){
   const s = activeSet();
-  $("editorCard").style.display = s ? "" : "none";
-  $("issueCard").style.display = s ? "" : "none";
+  syncTabs();
   if(!s){ $("rows").innerHTML = ""; return; }
   $("setName").value = s.n || "";
   $("setDate").value = s.d || "";
+  $("rowFilter").value = rowFilter;
+  $("rowSort").value = rowSort;
+  $("noteFilter").value = noteFilter;
   renderRows();
   renderMeta();
 }
@@ -783,7 +835,7 @@ function rowNode(r, i){
   const del = document.createElement("button");
   del.className = "ghost small"; del.textContent = "✕"; del.title = "Удалить строку";
   del.onclick = ()=>{ updateSet(activeId(), s => { s.w.splice(i, 1); }); selectedRows.clear(); renderAll(); };
-  td().appendChild(del);
+  tr.appendChild(td()).appendChild(del);
   if(rowProblem(r)) tr.classList.add("bad");
   return tr;
 }
@@ -856,7 +908,7 @@ function duplicateSelected(){
   if(!s || !selectedRows.size) return;
   const rows = (s.w || []).filter((r, i) => selectedRows.has(i)).map(r => r.slice());
   if(!rows.length) return;
-  const copy = { i: newId(), n: (s.n || "Набор") + " (пачка)", d: today(), w: rows };
+  const copy = { i: newId(), n: (s.n || "Набор") + " (пачка)", d: today(), w: rows, derived: true };
   const list = loadSets();
   list.unshift(copy);
   saveSets(list);
@@ -873,22 +925,11 @@ $("setName").addEventListener("input", e => {
 $("setDate").addEventListener("input", e => {
   updateSet(activeId(), s => { s.d = e.target.value; }); flashSaved(); renderList(); renderIssue();
 });
-$("dupSet").addEventListener("click", ()=> duplicateSet(lsGet(LS_ACTIVE)));
-$("delSet").addEventListener("click", ()=>{
-  const id = lsGet(LS_ACTIVE);
-  const s = activeSet();
-  if(!s) return;
-  if(!confirm("Удалить набор «" + s.n + "»?")) return;
-  const l = loadSets().filter(x => x.i !== id);
-  saveSets(l);
-  lsSet(LS_ACTIVE, (l[0] || {}).i || "");
-  renderAll();
-});
 
 function duplicateSet(id){
   const s = loadSets().find(x => x.i === id);
   if(!s) return;
-  const copy = {i: newId(), n: s.n + " (копия)", d: today(), w: (s.w || []).map(r => r.slice())};
+  const copy = {i: newId(), n: s.n + " (копия)", d: today(), w: (s.w || []).map(r => r.slice()), derived: true};
   const list = loadSets();
   list.unshift(copy);
   saveSets(list);
@@ -897,11 +938,16 @@ function duplicateSet(id){
 }
 
 /* ===== СОЗДАНИЕ И ИМПОРТ ===== */
-function addSet(name, rows, keepId, date){
+function addSet(name, rows, keepId, date, baseFlag){
   const set = {i: keepId || newId(), n: name || ("Набор " + new Date().toLocaleDateString("ru-RU")), d: date || today(), w: rows || []};
+  if(baseFlag) set.base = true;
   const list = loadSets();
   const i = list.findIndex(x => x.i === set.i);
-  if(i >= 0) list[i] = set; else list.unshift(set);
+  if(i >= 0){
+    if(list[i].base) set.base = true;
+    if(list[i].derived) set.derived = true;
+    list[i] = set;
+  } else list.unshift(set);
   saveSets(list);
   setActive(set.i);
   renderAll();
@@ -918,9 +964,20 @@ function baseRows(){
     return [ru, forms.join("|"), forms.map(f => T[f] || "").join("|"), ""];
   });
 }
-$("newFromBase").addEventListener("click", ()=>{
-  addSet("Неправильные глаголы (" + VERB_BASE.split("\n").length + ")", baseRows());
-});
+function newFromBase(){
+  addSet("Неправильные глаголы", baseRows(), null, null, true);
+}
+function isVerbBase(s){
+  if(!s || !Array.isArray(s.w)) return false;
+  if(s.base) return true;
+  if(s.derived) return false;
+  if(/\((копия|пачка)\)/.test(String(s.n || ""))) return false;
+  if(/^Неправильные глаголы(\s*\(\d+\))?$/.test(String(s.n || "").trim())) return true;
+  const base = VERB_BASE.split("\n").filter(l => l.trim()).map(l => l.split("|")[0]);
+  const w = s.w;
+  if(w.length < base.length) return false;
+  return base.every((ru, i) => String((w[i] || [])[0] || "") === ru);
+}
 
 /* --- вставка текстом --- */
 function normalizePipe(text){
@@ -986,16 +1043,6 @@ $("pasteGo").addEventListener("click", ()=>{
 $("pasteClear").addEventListener("click", ()=>{
   $("pasteBox").value = ""; $("pastePreview").innerHTML = ""; $("pasteStatus").textContent = "";
 });
-$("pasteInto").addEventListener("click", ()=>{
-  const t = $("pasteBox").value;
-  if(!t.trim() || !activeSet()){ alert("Вставьте текст и откройте набор."); return; }
-  const res = parseText(normalizePipe(t));
-  if(!res.ok.length){ alert("Ничего не распознано."); return; }
-  updateSet(activeId(), s => { s.w = (s.w || []).concat(rowsFromParse(res)); });
-  $("pasteBox").value = "";
-  $("pasteStatus").textContent = "Добавлено слов: " + res.ok.length + (res.rejected.length ? ", не распознано: " + res.rejected.length : "");
-  renderAll();
-});
 
 /* --- быстрое добавление своих слов в открытый набор --- */
 $("quickAddGo").addEventListener("click", ()=>{
@@ -1019,6 +1066,7 @@ $("loadFile").addEventListener("change", e => {
   const f = e.target.files[0];
   e.target.value = "";
   if(!f) return;
+  $("pasteDetails").open = true;
   const r = new FileReader();
   r.onload = ()=>{
     const text = String(r.result || "");
@@ -1041,24 +1089,6 @@ $("loadFile").addEventListener("change", e => {
   };
   r.readAsText(f, "utf-8");
 });
-
-/* --- файлы пробной версии --- */
-function checkLegacy(){
-  const raw = lsGet(LS_LEGACY);
-  if(!raw) return;
-  const res = parseText(raw);
-  if(!res.ok.length) return;
-  $("bannerText").textContent = "Найден сохранённый словарь из пробной версии: " + wordsCount(res.ok.length)
-    + (res.rejected.length ? ", не распознано строк: " + res.rejected.length : "") + ".";
-  $("banner").style.display = "";
-}
-$("importLegacy").addEventListener("click", ()=>{
-  const res = parseText(lsGet(LS_LEGACY) || "");
-  if(!res.ok.length) return;
-  addSet("Словарь из пробной версии", rowsFromParse(res));
-  $("banner").style.display = "none";
-});
-$("hideLegacy").addEventListener("click", ()=> $("banner").style.display = "none");
 
 /* ===== СКАЧИВАНИЕ ===== */
 function download(name, content, mime){
@@ -1146,7 +1176,13 @@ function renderIssue(){
         ? '<div style="margin-top:8px">Выдаются только готовые строки: <b>' + ready.length + "</b>.</div>"
         : '<div class="row" style="margin-top:8px"><button class="small" id="dropBad">Выдать только готовые строки (' + ready.length + ')</button></div>')
     + "</div>";
-  warn.innerHTML = html;
+  if(lastIssueHtml !== html){
+    warn.innerHTML = html;
+    lastIssueHtml = html;
+    warn.classList.remove("pop");
+    void warn.offsetWidth;
+    warn.classList.add("pop");
+  }
   const b = $("dropBad");
   if(b) b.onclick = ()=>{ onlyGood = true; renderIssue(); renderMeta(); };
 
@@ -1186,13 +1222,25 @@ async function copyText(text, box, btn){
 $("copyLink").addEventListener("click", e => copyText($("linkBox").value, $("linkBox"), e.currentTarget));
 $("copyCode").addEventListener("click", e => copyText($("codeBox").value, $("codeBox"), e.currentTarget));
 
+/* ===== ВКЛАДКИ ===== */
+$("tabEdit").addEventListener("click", ()=> setTab("edit"));
+$("tabIssue").addEventListener("click", ()=> setTab("issue"));
+
 /* ===== ЗАПУСК ===== */
 function renderAll(){ renderList(); renderEditor(); renderIssue(); }
 $("baseUrl").value = lsGet(LS_BASE_URL) || "motya.html";
 $("baseUrl").addEventListener("change", ()=>{ lsSet(LS_BASE_URL, $("baseUrl").value.trim() || "motya.html"); });
-if(!lsGet(LS_SETS) && !loadSets().length) lsSet(LS_SETS, "[]");
+(function(){
+  const list = loadSets();
+  let dirty = false;
+  list.forEach(s => { if(!s.base && isVerbBase(s)){ s.base = true; dirty = true; } });
+  if(!list.some(s => isVerbBase(s))){
+    list.unshift({ i: newId(), n: "Неправильные глаголы", d: today(), w: baseRows(), base: true });
+    dirty = true;
+  }
+  if(dirty) saveSets(list);
+})();
 renderAll();
-checkLegacy();
 </script>
 </body>
 </html>
