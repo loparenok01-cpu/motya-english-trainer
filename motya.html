@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Мотя учит слова 🕷️</title>
+<title>Мотя учит английские слова 🕷️</title>
 <style>
   :root{
     --bg1:#eaf6ea; --bg2:#d8ecd8; --ink:#2e5d3a;
@@ -114,7 +114,7 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>🕷️ Мотя учит слова <small>паук-полиглот. Ползи по паутинке и собирай слова!</small></h1>
+    <h1>🕷️ Мотя учит английские слова <small>паук-полиглот. Ползи по паутинке и собирай слова!</small></h1>
     <button class="mute-btn" id="mute" title="Звук вкл/выкл">🔊</button>
   </header>
 
@@ -124,15 +124,6 @@
       <div class="got-name" id="gotName"></div>
       <div class="muted" id="gotMeta"></div>
       <div id="gotDiff" class="diff" style="display:none"></div>
-    </div>
-
-    <div id="legacyBox" class="got-box" style="display:none">
-      <span class="tag">из пробной версии</span>
-      <div class="muted" id="legacyMeta"></div>
-      <div class="row" style="margin-top:8px">
-        <button class="ghost small" id="useLegacy">Использовать как набор</button>
-        <button class="ghost small" id="dropLegacy">Скрыть</button>
-      </div>
     </div>
 
     <div class="row" style="justify-content:space-between">
@@ -719,7 +710,7 @@ let lastErrors = [], gen = 0, onlyErrors = false;
 
 /* ===== ХРАНИЛИЩА ===== */
 const LS_HISTORY = "motya_history_v1", LS_PUPILS = "motya_pupils_v1", LS_PREFS = "motya_prefs_v1";
-const LS_LEGACY = "motya_last_dict_v1", LS_RECORDS = "motya_records_v1";
+const LS_RECORDS = "motya_records_v1";
 
 function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
 function lsSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
@@ -864,24 +855,6 @@ function tryLink(){
   $("entryStatus").textContent = "✅ Набор «" + got.n + "» получен по ссылке.";
   return true;
 }
-
-/* наследие: словарь из пробной версии */
-function checkLegacy(){
-  const raw = lsGet(LS_LEGACY);
-  if(!raw) return;
-  const res = parseText(raw);
-  if(!res.ok.length) return;
-  $("legacyBox").style.display = "";
-  $("legacyMeta").textContent = "Найден сохранённый словарь из пробной версии: " + res.ok.length + " слов.";
-}
-$("useLegacy").addEventListener("click", ()=>{
-  const res = parseText(lsGet(LS_LEGACY) || "");
-  if(!res.ok.length) return;
-  acceptSet({i:"", n:"Словарь из пробной версии", d:today(),
-             w:res.ok.map(w => [w.ru, w.en.join("|"), w.trans.join("|"), ""])}, "импорт");
-  $("legacyBox").style.display = "none";
-});
-$("dropLegacy").addEventListener("click", ()=>{ $("legacyBox").style.display = "none"; });
 
 /* настройки */
 $("mode").addEventListener("change", e=>{
@@ -1414,7 +1387,7 @@ $("exportCsv").addEventListener("click", ()=>{
   const ok = stats.filter(x => x.ok).length;
   const attempts = stats.reduce((a,x) => a + x.attempts, 0);
   const L = [];
-  L.push(["Отчёт по игре «Мотя учит слова»"].join(s));
+  L.push(["Отчёт по игре «Мотя учит английские слова»"].join(s));
   L.push(["Ученик", pupil].join(s));
   L.push(["Набор", activeSet ? activeSet.n : "—"].join(s));
   L.push(["Дата", new Date().toLocaleString("ru-RU")].join(s));
@@ -1453,7 +1426,7 @@ $("exportCsv").addEventListener("click", ()=>{
 
 /* ===== СТАРТ ===== */
 loadPrefs(); applyPrefsToUi();
-renderEntry(); renderRecords(); checkLegacy();
+renderEntry(); renderRecords();
 if(!tryLink()) renderEntry();
 </script>
 </body>
