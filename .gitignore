@@ -1,3 +1,4 @@
 *.zip
 *.jpg
 !Скрин_*.jpg
+tests/node_modules/

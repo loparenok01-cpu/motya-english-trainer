@@ -71,7 +71,7 @@
   .count-ok{color:#2f7a3f}
   #issueWarn.pop{animation:popIn .18s ease both}
   .tabs{display:flex;gap:4px;margin:6px 0 0;padding:4px;background:#e2f0e5;border-radius:14px;width:fit-content;max-width:100%}
-  .tab{background:transparent;color:#3d6b49;box-shadow:none;border:0;border-radius:10px;padding:9px 18px;font-size:15px;font-weight:600;min-height:42px;transition:background-color .15s ease,color .15s ease,box-shadow .15s ease}
+  .tab{background:transparent;color:#3d6b49;box-shadow:none;border:2px solid #2e5d3a;border-radius:10px;padding:9px 18px;font-size:15px;font-weight:600;min-height:42px;transition:background-color .15s ease,color .15s ease,box-shadow .15s ease}
   .tab:hover:not(:disabled){background:rgba(255,255,255,.7);color:var(--ink)}
   .tab:active:not(:disabled){transform:none;box-shadow:none}
   .tab.on{background:#fff;color:var(--ink);box-shadow:0 2px 6px rgba(46,93,58,.16)}
@@ -79,6 +79,17 @@
   @keyframes popIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
   @keyframes softIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   :focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+  @media (max-width:700px){
+    .wrap{padding:10px}
+    .card{padding:12px 10px;border-radius:14px}
+    h1{font-size:21px}
+    .edit{font-size:13px}
+    .edit input{font-size:16px;padding:6px 7px}
+    .edit th{padding:5px 4px}
+    .tabs{width:100%;overflow-x:auto}
+    .tab{padding:9px 12px;font-size:14px}
+    button{font-size:14px}
+  }
   @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 </head>
@@ -356,6 +367,35 @@ function rowsToWords(rows){
     return {ru: String(r[0]||""), en, trans: tr};
   });
 }
+/* строки с одинаковым V1 (первой английской формой) — один глагол: переводы объединяются,
+   в игре он предлагается один раз, в EN→RU принимается любой из переводов */
+function mergeRowsByEn(rows){
+  const byV1 = new Map();
+  const out = [];
+  for(const r of (rows||[])){
+    const raw = [String(r[0]||""), String(r[1]||""), String(r[2]||""), String(r[3]||"")];
+    const en = raw[1].split("|").filter(Boolean);
+    const ru = raw[0].trim();
+    if(!en.length || !ru){ out.push(raw); continue; }
+    const key = normalizeKey(en[0]);
+    const prev = byV1.get(key);
+    if(!prev){
+      byV1.set(key, raw);
+      out.push(raw);
+    } else {
+      const parts = [], seen = new Set();
+      for(const src of [prev[0], ru]){
+        for(const part of String(src).split(",")){
+          const t = part.trim(), k = normalizeKey(t);
+          if(t && !seen.has(k)){ seen.add(k); parts.push(t); }
+        }
+      }
+      prev[0] = parts.join(", ");
+      if(!prev[2].trim()) prev[2] = raw[2];
+    }
+  }
+  return out;
+}
 /* lean=true — id и name не дублируются в payload: для ссылки они и так лежат отдельными параметрами */
 function packSet(set, lean){
   const rows = setToRows(set).map(r=>{
@@ -557,12 +597,13 @@ function recordSession(setId, pupil, session){
 }
 function progressSummary(setId, pupil, rows){
   const p = getProgress(setId, pupil);
+  const merged = mergeRowsByEn(rows || []);
   let learned = 0, touched = 0;
-  for(const r of rows){
+  for(const r of merged){
     const e = p.w[normalizeKey(r[0])];
     if(e){ touched++; if(e.last) learned++; }
   }
-  return {learned, touched, total: rows.length, sessions: (p.s||[]).length};
+  return {learned, touched, total: merged.length, sessions: (p.s||[]).length};
 }
 function normalizeKey(s){ return String(s||"").toLowerCase().replace(/\s+/g," ").trim(); }
 function diffSets(oldSet, newSet){
@@ -1100,7 +1141,7 @@ function download(name, content, mime){
   setTimeout(()=> URL.revokeObjectURL(url), 500);
 }
 function safeName(n){ return String(n || "набор").replace(/[\\/:*?"<>|]/g, "-").replace(/\s+/g, "_").slice(0, 60); }
-function csvCell(v){ const s = String(v == null ? "" : v); return /[;"\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+function csvCell(v){ let s = String(v == null ? "" : v); if(/^[=+\-@\t]/.test(s)) s = "'" + s; return /[;"\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
 function setToCsv(set){
   const L = ["Русский;V1;Транскрипция V1;V2;Транскрипция V2;V3;Транскрипция V3"];
   for(const r of (set.w || [])){

@@ -1,0 +1,11 @@
+{
+  "name": "motya-tests",
+  "private": true,
+  "description": "Автотесты проекта «Мотя»: ядро, сверка CORE, jsdom-смоуки ученика и преподавателя",
+  "scripts": {
+    "test": "node run-all.js"
+  },
+  "dependencies": {
+    "jsdom": "^30.1.2"
+  }
+}

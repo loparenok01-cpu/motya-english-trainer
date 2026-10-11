@@ -379,6 +379,35 @@ function rowsToWords(rows){
     return {ru: String(r[0]||""), en, trans: tr};
   });
 }
+/* строки с одинаковым V1 (первой английской формой) — один глагол: переводы объединяются,
+   в игре он предлагается один раз, в EN→RU принимается любой из переводов */
+function mergeRowsByEn(rows){
+  const byV1 = new Map();
+  const out = [];
+  for(const r of (rows||[])){
+    const raw = [String(r[0]||""), String(r[1]||""), String(r[2]||""), String(r[3]||"")];
+    const en = raw[1].split("|").filter(Boolean);
+    const ru = raw[0].trim();
+    if(!en.length || !ru){ out.push(raw); continue; }
+    const key = normalizeKey(en[0]);
+    const prev = byV1.get(key);
+    if(!prev){
+      byV1.set(key, raw);
+      out.push(raw);
+    } else {
+      const parts = [], seen = new Set();
+      for(const src of [prev[0], ru]){
+        for(const part of String(src).split(",")){
+          const t = part.trim(), k = normalizeKey(t);
+          if(t && !seen.has(k)){ seen.add(k); parts.push(t); }
+        }
+      }
+      prev[0] = parts.join(", ");
+      if(!prev[2].trim()) prev[2] = raw[2];
+    }
+  }
+  return out;
+}
 /* lean=true — id и name не дублируются в payload: для ссылки они и так лежат отдельными параметрами */
 function packSet(set, lean){
   const rows = setToRows(set).map(r=>{
@@ -580,12 +609,13 @@ function recordSession(setId, pupil, session){
 }
 function progressSummary(setId, pupil, rows){
   const p = getProgress(setId, pupil);
+  const merged = mergeRowsByEn(rows || []);
   let learned = 0, touched = 0;
-  for(const r of rows){
+  for(const r of merged){
     const e = p.w[normalizeKey(r[0])];
     if(e){ touched++; if(e.last) learned++; }
   }
-  return {learned, touched, total: rows.length, sessions: (p.s||[]).length};
+  return {learned, touched, total: merged.length, sessions: (p.s||[]).length};
 }
 function normalizeKey(s){ return String(s||"").toLowerCase().replace(/\s+/g," ").trim(); }
 function diffSets(oldSet, newSet){
@@ -695,7 +725,7 @@ function ensureSetId(set){
 function fmtDate(iso){ const d = new Date(iso); return d.toLocaleDateString("ru-RU") + " " + d.toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}); }
 function fmtDateShort(iso){ try{ return new Date(iso).toLocaleDateString("ru-RU"); }catch(e){ return ""; } }
 function fmtTime(s){ const m=Math.floor(s/60), sec=s%60; return String(m).padStart(2,"0")+":"+String(sec).padStart(2,"0"); }
-function csvEscape(v){ const s = String(v ?? ""); return /[;"\r\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s; }
+function csvEscape(v){ let s = String(v ?? ""); if(/^[=+\-@\t]/.test(s)) s = "'" + s; return /[;"\r\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s; }
 
 const $ = id => document.getElementById(id);
 const entry=$("entry"), game=$("game"), finish=$("finish");
@@ -762,7 +792,7 @@ function renderEntry(){
   if(activeSet){
     $("gotName").textContent = activeSet.n;
     const sum = progressSummary(activeSet.i, pupil || guessPupil(), activeSet.w);
-    $("gotMeta").textContent = (activeSet.w||[]).length + " слов · освоено " + sum.learned + " из " + sum.total
+    $("gotMeta").textContent = sum.total + " слов · освоено " + sum.learned + " из " + sum.total
       + (sum.sessions ? " · занятий: " + sum.sessions : "");
   }
   const list = $("histList");
@@ -777,7 +807,7 @@ function renderEntry(){
     const pct = sum.total ? Math.round(sum.learned/sum.total*100) : 0;
     div.innerHTML =
       '<div class="t"><b>' + escapeHtml(rec.n) + '</b>'
-      + '<span class="muted">' + (rec.w ? rec.w.length : 0) + ' слов · освоено ' + sum.learned + '</span>'
+      + '<span class="muted">' + sum.total + ' слов · освоено ' + sum.learned + '</span>'
       + '<div class="progress-mini"><div style="width:' + pct + '%"></div></div>'
       + '<span class="muted" style="font-size:11px">' + (rec.src ? escapeHtml(rec.src) + " · " : "") + fmtDateShort(rec.last) + '</span></div>';
     const bPlay = document.createElement("button");
@@ -906,7 +936,7 @@ function applyWordLimit(){
 $("start").addEventListener("click", ()=>{
   SFX.ensure();
   if(!activeSet){ alert("Сначала добавьте набор: откройте ссылку преподавателя или вставьте код."); $("addBox").style.display = ""; return; }
-  const all = rowsToWords(activeSet.w);
+  const all = rowsToWords(mergeRowsByEn(activeSet.w));
   wordsOriginal = all.filter(w => w.ru && w.en.length);
   if(!wordsOriginal.length){ alert("В наборе нет слов."); return; }
   const broken = all.length - wordsOriginal.length;
@@ -917,8 +947,10 @@ $("start").addEventListener("click", ()=>{
     $("pupil").value = pupil;
   }
   if(!pupil){ alert("Введите имя — иначе прогресс не сохранится."); $("pupil").focus(); return; }
+  pupil = pupil.slice(0, 40);
+  $("pupil").value = pupil;
   const pl = loadPupils();
-  if(!pl.includes(pupil)){ pl.push(pupil); savePupils(pl); }
+  if(!pl.includes(pupil)){ pl.push(pupil); savePupils(pl.slice(-20)); }
 
   readPrefs();
   mode = prefs.mode; verbForm = prefs.verbForm; wordOrder = prefs.wordOrder;
@@ -1366,9 +1398,9 @@ function renderRecordsTable(container){
   recs.slice(0,10).forEach((r,i)=>{
     const top = best.get(r.mode) === r.score;
     html += "<tr" + (top ? ' style="background:#f3fbf3"' : "") + "><td>" + (i+1) + "</td><td>" + escapeHtml(r.name)
-      + "</td><td>" + fmtDate(r.date) + "</td><td>" + escapeHtml(r.set || "—") + " " + modeLabel(r.mode, r.verbForm, r.wordOrder)
-      + (r.timed ? " ⏱" : "") + "</td><td><b>" + (r.pct != null ? r.pct + "%" : "—") + "</b></td><td>" + r.score
-      + "</td><td>" + r.correct + "/" + r.total + "</td><td>" + fmtTime(r.time) + "</td></tr>";
+      + "</td><td>" + escapeHtml(fmtDate(r.date)) + "</td><td>" + escapeHtml(r.set || "—") + " " + escapeHtml(modeLabel(r.mode, r.verbForm, r.wordOrder))
+      + (r.timed ? " ⏱" : "") + "</td><td><b>" + (r.pct != null ? escapeHtml(String(r.pct)) + "%" : "—") + "</b></td><td>" + escapeHtml(String(r.score))
+      + "</td><td>" + escapeHtml(String(r.correct)) + "/" + escapeHtml(String(r.total)) + "</td><td>" + escapeHtml(fmtTime(r.time)) + "</td></tr>";
   });
   html += "</tbody></table>";
   if(recs.length > 10) html += '<div class="muted" style="margin-top:6px">Показаны лучшие 10 из ' + recs.length + ".</div>";
@@ -1388,8 +1420,8 @@ $("exportCsv").addEventListener("click", ()=>{
   const attempts = stats.reduce((a,x) => a + x.attempts, 0);
   const L = [];
   L.push(["Отчёт по игре «Мотя учит английские слова»"].join(s));
-  L.push(["Ученик", pupil].join(s));
-  L.push(["Набор", activeSet ? activeSet.n : "—"].join(s));
+  L.push(["Ученик", csvEscape(pupil)].join(s));
+  L.push(["Набор", csvEscape(activeSet ? activeSet.n : "—")].join(s));
   L.push(["Дата", new Date().toLocaleString("ru-RU")].join(s));
   L.push(["Режим", modeLabel(mode, verbForm, wordOrder)].join(s));
   L.push(["Порядок слов", wordOrder === "random" ? "случайный" : "по порядку"].join(s));
