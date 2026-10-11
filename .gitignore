@@ -1,4 +1,12 @@
-*.zip
-*.jpg
-!Скрин_*.jpg
+# Dependencies
 tests/node_modules/
+
+# Archives and binaries
+*.zip
+
+# OS junk
+Thumbs.db
+.DS_Store
+
+# Screenshots in docs are committed; ignore stray images in root
+/*.jpg
