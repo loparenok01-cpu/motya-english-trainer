@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Мотя — презентация кейса</title>
+<style>
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:#f7f7f8;color:#1a1a1a;display:flex;flex-direction:column;overflow:hidden}
+.progress{height:4px;background:#e5e7eb;flex:none}
+.progress span{display:block;height:100%;width:14%;background:#ffd166;transition:width .25s}
+.deck{flex:1;position:relative;overflow:hidden}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:clamp(26px,4vw,60px);background:#fff;overflow-y:auto}
+.slide.active{display:flex}
+.eyebrow{margin:0 0 10px;text-transform:uppercase;letter-spacing:1.5px;font-size:13px;color:#9fb3d8}
+.slide-head{display:flex;align-items:baseline;gap:16px;margin-bottom:22px}
+.slide-num{font-size:13px;color:#9ca3af;letter-spacing:1px}
+.slide-head h2{margin:0;font-size:clamp(24px,2.8vw,36px);color:#14213d}
+.lead{font-size:clamp(16px,1.7vw,23px);line-height:1.5;color:#dbe4f3;max-width:64ch;margin:0}
+h1{margin:0 0 14px;font-size:clamp(34px,5vw,58px);line-height:1.1}
+.s-title{background:#14213d;color:#fff}
+.chips{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.chip{border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:9px 18px;font-size:14px;color:#ffd166;background:rgba(255,255,255,.06);white-space:nowrap}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.card{background:#f7f7f8;border:1px solid #ececec;border-radius:12px;padding:20px 22px}
+.card h3{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.7px;color:#6b7280}
+.card p{margin:0;font-size:clamp(14px,1.4vw,17px);line-height:1.55;color:#333}
+.steps{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:12px;margin-top:26px}
+.step{background:#14213d;color:#fff;border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.45}
+.step b{color:#ffd166;font-size:12px;text-transform:uppercase;letter-spacing:.8px}
+.arrow{align-self:center;color:#14213d;font-size:26px;font-weight:700}
+.points{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.points li{position:relative;padding-left:30px;font-size:clamp(15px,1.55vw,20px);line-height:1.5;color:#222}
+.points li::before{content:"";position:absolute;left:0;top:.45em;width:12px;height:12px;border-radius:50%;background:#ffd166;border:2px solid #14213d}
+.btn{display:inline-block;background:#14213d;color:#fff;padding:13px 28px;border-radius:8px;text-decoration:none;font-weight:600;width:fit-content;margin-top:30px}
+.btn:hover{background:#1d3557}
+.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feat .card{padding:16px 18px}
+.feat .card h3{color:#14213d;font-size:15px;text-transform:none;letter-spacing:0}
+.feat .card p{font-size:14px}
+.result-text{margin:0 0 20px;font-size:clamp(14px,1.45vw,17px);line-height:1.55;color:#333;max-width:110ch}
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.shot{margin:0}
+.frame{height:clamp(150px,32vh,300px);background:#f0f2f5;border:1px solid #e5e7eb;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.frame img{max-width:100%;max-height:100%;object-fit:contain}
+.shot figcaption{font-size:13px;color:#6b7280;text-align:center;margin-top:8px}
+.s-cta{background:#14213d;color:#fff;align-items:center;text-align:center}
+.s-cta h2{color:#fff;margin:0 0 10px;font-size:clamp(26px,3.4vw,42px)}
+.s-cta p{color:#c7d3ea;font-size:clamp(15px,1.6vw,19px);margin:0}
+.cta-btn{display:inline-block;background:#ffd166;color:#14213d;padding:15px 34px;border-radius:8px;text-decoration:none;font-weight:700;margin-top:30px;font-size:17px}
+.cta-btn:hover{background:#ffe08a}
+.cta-mail{display:block;margin-top:16px;color:#9fb3d8;font-size:14px;text-decoration:none}
+.nav{flex:none;display:flex;align-items:center;gap:14px;padding:10px 18px;background:#fff;border-top:1px solid #eee}
+.nav .brand{color:#6b7280;font-size:13px}
+.counter{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:700;color:#14213d}
+.nav button{width:40px;height:40px;border-radius:50%;border:1px solid #d7dbe3;background:#fff;font-size:18px;color:#14213d;cursor:pointer}
+.nav button:hover{background:#14213d;color:#ffd166;border-color:#14213d}
+@media (max-width:860px){
+  .cols,.feat,.shots{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .arrow{transform:rotate(90deg)}
+  .nav .brand{display:none}
+}
+@media print{
+  @page{size:A4 landscape;margin:0}
+  body{overflow:visible;display:block;background:#fff}
+  .progress,.nav{display:none}
+  .deck{position:static;overflow:visible}
+  .slide{position:static;display:flex!important;page-break-after:always;break-after:page;width:100%;height:100vh;overflow:hidden}
+  .slide:last-child{page-break-after:auto;break-after:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="progress"><span id="bar"></span></div>
+
+<main class="deck">
+
+  <section class="slide s-title active">
+    <p class="eyebrow">Кейс проекта · презентация</p>
+    <h1>Мотя учит английские слова</h1>
+    <p class="lead">Учебный тренажёр для заучивания неправильных глаголов (и других слов) английского языка через игру и прямо в браузере.</p>
+    <div class="chips">
+      <span class="chip">Работает офлайн — без сервера и установки</span>
+      <span class="chip">2 самодостаточных HTML-файла</span>
+      <span class="chip">414 автотестов зелёные (205 + 111 + 98)</span>
+      <span class="chip">Стартовый набор: 102 глагола с транскрипциями</span>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-head"><span class="slide-num">02</span><h2>Проблема и задача</h2></div>
+    <div class="cols">
+      <div class="card">
+        <h3>Проблема</h3>
+        <p>Готовые сервисы требуют регистрации и интернета, перегружены лишним, а свои слова раздают через таблицы и печать — нет быстрого способа выдать свой список и получить обратную связь.</p>
+      </div>
+      <div class="card">
+        <h3>Задача</h3>
+        <p>Сделать приложение, чтобы за пару минут собрать набор слов, выдать ссылку с заданием, чтобы ученики тренировались каждый в своем браузере — без сервера, установки и регистрации.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-head"><span class="slide-num">03</span><h2>Для кого и как это работает</h2></div>
+    <p class="result-text">Учителя английского языка, их родители и сами ученики: учитель (родитель или сам ученик) готовит набор слов для запоминания в преподавательском редакторе приложения; ученики играют в браузере, прогресс хранится отдельно (на каждого ученика, если их в приложении несколько).</p>
+    <div class="steps">
+      <div class="step"><b>Шаг 1</b>Учитель готовит набор слов в редакторе: добавляет, редактирует, копирует наборы</div>
+      <div class="arrow">→</div>
+      <div class="step"><b>Шаг 2</b>Выдаёт классу ссылку с заданием — за минуту, без регистрации</div>
+      <div class="arrow">→</div>
+      <div class="step"><b>Шаг 3</b>Ученики играют в браузере, прогресс и рекорды хранятся отдельно у каждого</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-head"><span class="slide-num">04</span><h2>Решение</h2></div>
+    <ul class="points">
+      <li>Два самодостаточных HTML-файла: редактор преподавателя и игра ученика</li>
+      <li>Данные набора вшиваются прямо в ссылку или код, всё хранится в localStorage</li>
+      <li>Сервер, установка и регистрация не нужны — работает офлайн, распаковывается одним архивом</li>
+      <li>Открывается в любом браузере на компьютере или планшете</li>
+    </ul>
+    <a class="btn" href="motya-teacher.html" target="_blank" rel="noreferrer">Открыть проект →</a>
+  </section>
+
+  <section class="slide">
+    <div class="slide-head"><span class="slide-num">05</span><h2>Основные функции</h2></div>
+    <div class="feat">
+      <div class="card">
+        <h3>5 режимов игры</h3>
+        <p>Ввод ответа, карточки, EN→RU и три формы глаголов (V1/V2/V3)</p>
+      </div>
+      <div class="card">
+        <h3>Гибкое задание</h3>
+        <p>Выбор количества слов (от всего набора до 10) и режим «на время»</p>
+      </div>
+      <div class="card">
+        <h3>База глаголов</h3>
+        <p>102 неправильных глагола с транскрипциями, защищённый стартовый набор</p>
+      </div>
+      <div class="card">
+        <h3>Пакетная выдача</h3>
+        <p>Слова с отметками для класса: готовый список за один клик</p>
+      </div>
+      <div class="card">
+        <h3>Отчёт ученика</h3>
+        <p>Выгрузка результатов в CSV, история и статистика по игре</p>
+      </div>
+      <div class="card">
+        <h3>Прогресс и рекорды</h3>
+        <p>Каждый результат сохраняется в браузере отдельно на ученика</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-head"><span class="slide-num">06</span><h2>Результат</h2></div>
+    <p class="result-text">Рабочий комплект: созданный набор слов (в редакторе есть возможность добавления, редактирования слов, копирования наборов и их части), выдаётся ученику/ученикам ссылкой за минуту, две страницы работают офлайн и распаковываются одним архивом. Загружен стартовый набор: 102 неправильных глагола (формы V1, V2, V3) с транскрипциями.</p>
+    <div class="shots">
+      <figure class="shot">
+        <div class="frame"><img src="Скрин_набор преподавателя.jpg" alt="Редактор наборов в файле преподавателя"></div>
+        <figcaption>Редактор наборов в файле преподавателя</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="frame"><img src="Скрин_игра ученика.jpg" alt="Игра ученика — паук-полиглот и ввод ответа"></div>
+        <figcaption>Игра ученика — паук-полиглот и ввод ответа</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="frame"><img src="Скрин_выдача набора ученику по ссылке.jpg" alt="Выдача набора ученику по ссылке"></div>
+        <figcaption>Выдача набора ученику по ссылке</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="slide s-cta">
+    <h2>Хотите такой же результат для своей задачи?</h2>
+    <p>Готовый кейс читается за 2–3 минуты: что за проект, для кого он и какую пользу принёс.</p>
+    <a class="cta-btn" href="mailto:l6344@list.ru">Связаться со мной</a>
+    <a class="cta-mail" href="case-template.html" target="_blank" rel="noreferrer">Открыть полный кейс →</a>
+  </section>
+
+</main>
+
+<footer class="nav">
+  <span class="brand">Мотя учит английские слова · кейс</span>
+  <span class="counter" id="counter">1 / 7</span>
+  <button id="prev" aria-label="Предыдущий слайд">←</button>
+  <button id="next" aria-label="Следующий слайд">→</button>
+</footer>
+
+<script>
+var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+var counter = document.getElementById('counter');
+var bar = document.getElementById('bar');
+var i = 0;
+function show(n) {
+  i = Math.max(0, Math.min(slides.length - 1, n));
+  slides.forEach(function (s, k) { s.classList.toggle('active', k === i); });
+  counter.textContent = (i + 1) + ' / ' + slides.length;
+  bar.style.width = ((i + 1) / slides.length * 100) + '%';
+  slides[i].scrollTop = 0;
+}
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { show(i + 1); e.preventDefault(); }
+  else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { show(i - 1); e.preventDefault(); }
+  else if (e.key === 'Home') { show(0); e.preventDefault(); }
+  else if (e.key === 'End') { show(slides.length - 1); e.preventDefault(); }
+});
+document.getElementById('prev').addEventListener('click', function () { show(i - 1); });
+document.getElementById('next').addEventListener('click', function () { show(i + 1); });
+show(0);
+</script>
+
+</body>
+</html>
