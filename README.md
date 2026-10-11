@@ -140,7 +140,7 @@
 ### Для разработчика
 
 ```bash
-git clone https://github.com/Olleva/motya-english-trainer.git
+git clone https://github.com/loparenok01-cpu/motya-english-trainer.git
 cd motya-english-trainer/tests
 npm install   # один раз; нужен Node.js 18+
 npm test      # 472 проверки
