@@ -10,3 +10,7 @@ Thumbs.db
 
 # Screenshots in docs are committed; ignore stray images in root
 /*.jpg
+
+# Local-only materials (not published to GitHub)
+docs/case/
+docs/legacy/
